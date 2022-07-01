@@ -6,7 +6,7 @@ import (
   "os"
 )
 
-func fileExists(path string) bool {
+func _fileExists(path string) bool {
   fileInfo, err := os.Stat(path)
   if err != nil {
     return false
@@ -17,7 +17,7 @@ func fileExists(path string) bool {
   return true
 }
 
-func dirExists(dir string) bool {
+func _dirExists(dir string) bool {
   fileInfo, err := os.Stat(dir)
   if err != nil {
     return false
@@ -28,13 +28,13 @@ func dirExists(dir string) bool {
   return true
 }
 
-func dirMustExist(dir string) {
-  if !dirExists(dir) {
+func _dirMustExist(dir string) {
+  if !_dirExists(dir) {
     log.Fatalf("%s does not exist\n", dir)
   }
 }
 
-func checkError(err error) {
+func _checkError(err error) {
   if err != nil {
     log.Fatal(err)
   }
@@ -43,7 +43,7 @@ func checkError(err error) {
 // Got this from https://stackoverflow.com/questions/21060945/simple-way-to-copy-a-file
 // Copy the src file to dst. Any existing file will be overwritten and will not
 // copy file attributes.
-func copyFile(src, dst string) error {
+func _copyFile(src, dst string) error {
     in, err := os.Open(src)
     if err != nil {
         return err

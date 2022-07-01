@@ -1,4 +1,8 @@
 github.com/BurntSushi/toml v1.1.0/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
+github.com/brothertoad/bezier v0.0.0-20220628014337-8e0f5d043994 h1:xAnQnlV/uDF+KuLE91F75/vcImeqmIY4hsGXR9wYVHc=
+github.com/brothertoad/bezier v0.0.0-20220628014337-8e0f5d043994/go.mod h1:5CG+DAhxE6RHbAYrxi6PAc7CtYkUs+upKwNuxU3xLYo=
+github.com/brothertoad/btu v0.0.0-20220627165445-9881c2d1fb54 h1:8ArCD4ezO4B3s6ZY9JHHYSpcxQUzWMyBRTLuWSbtBDs=
+github.com/brothertoad/btu v0.0.0-20220627165445-9881c2d1fb54/go.mod h1:Bjd9geMePjEm0x0w2PO83sZNzkhUaKerlNG1eBBmYrQ=
 github.com/cpuguy83/go-md2man/v2 v2.0.1 h1:r/myEWzV9lfsM1tFLgDyu0atFtJ1fXn261LKYj/3DxU=
 github.com/cpuguy83/go-md2man/v2 v2.0.1/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/pelletier/go-toml v1.9.5 h1:4yBQzkHv+7BHq2PQUZF3Mx0IYxG7LsP222s7Agd3ve8=

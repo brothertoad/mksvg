@@ -6,6 +6,7 @@ import (
   "io/ioutil"
   "os"
   "github.com/pelletier/go-toml"
+  "github.com/brothertoad/btu"
 )
 
 type GlobalStruct struct {
@@ -32,9 +33,9 @@ var mask struct {
 
 func loadMask(path string) {
   b, err := ioutil.ReadFile(path)
-  checkError(err)
+  btu.CheckError(err)
   err = toml.Unmarshal(b, &mask)
-  checkError(err)
+    btu.CheckError(err)
   if mask.Global.PrintName == "" {
     mask.Global.PrintName = mask.Global.Title
   }
@@ -43,10 +44,10 @@ func loadMask(path string) {
 
 func loadImage(path string) {
   reader, err := os.Open(path)
-  checkError(err)
+  btu.CheckError(err)
   defer reader.Close();
   mask.image, err = jpeg.Decode(reader)
-  checkError(err)
+    btu.CheckError(err)
   mask.width = mask.image.Bounds().Max.X - mask.image.Bounds().Min.X
   mask.height = mask.image.Bounds().Max.Y - mask.image.Bounds().Min.Y
 }

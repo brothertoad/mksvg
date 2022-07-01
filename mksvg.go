@@ -7,6 +7,7 @@ import (
   "time"
   "github.com/urfave/cli/v2"
   "gopkg.in/yaml.v3"
+  "github.com/brothertoad/btu"
 )
 
 var config struct {
@@ -37,21 +38,21 @@ func main() {
 
 func initialize(c *cli.Context) error {
   path := c.String("config")
-  if !fileExists(path) {
+  if !btu.FileExists(path) {
     log.Fatalf("Config file '%s' does not exist.\n", path)
   }
   b, err := ioutil.ReadFile(path)
-  checkError(err)
+  btu.CheckError(err)
   err = yaml.Unmarshal(b, &config)
-  checkError(err)
+  btu.CheckError(err)
   if len(config.OutputDir) == 0 {
     log.Fatalf("No output directory specified in config file %s.\n", path)
   }
-  dirMustExist(config.OutputDir)
+  btu.DirMustExist(config.OutputDir)
   if len(config.TemplateDir) == 0 {
     log.Fatalf("No template directory specified in config file %s.\n", path)
   }
-  dirMustExist(config.TemplateDir)
+  btu.DirMustExist(config.TemplateDir)
   config.inputPath = c.String("input")
   if len(config.inputPath) == 0 {
     config.inputPath = "mask.toml"

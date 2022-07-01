@@ -6,6 +6,7 @@ import (
   "strconv"
   "strings"
   "github.com/urfave/cli/v2"
+  "github.com/brothertoad/btu"
 )
 
 var initCommand = cli.Command {
@@ -17,7 +18,7 @@ var initCommand = cli.Command {
 func doInit(c *cli.Context) error {
   filterTemplates("mask.html", "mask.css")
   dest := path.Join(config.OutputDir, "mask.jpg")
-  copyFile(mask.Global.Image, dest)
+  btu.CopyFile(mask.Global.Image, dest)
   // Create an empty SVG file.
   openSvg(path.Join(config.OutputDir, "mask.svg"))
   closeSvg()
@@ -29,7 +30,7 @@ func filterTemplates(templates ...string) {
     inputPath := path.Join(config.TemplateDir, template)
     outputPath := path.Join(config.OutputDir, template)
     b, err := ioutil.ReadFile(inputPath)
-    checkError(err)
+    btu.CheckError(err)
     ioutil.WriteFile(outputPath, filterBytes(b), 0644)
   }
 }

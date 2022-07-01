@@ -2,6 +2,7 @@ package main
 
 import (
   "os"
+  "github.com/brothertoad/btu"
 )
 
 var svgPrefix =`<?xml version="1.0" standalone="no"?>
@@ -21,9 +22,7 @@ var svgSuffix = `</svg>
 var svgFile *os.File
 
 func openSvg(path string) {
-  file, err := os.Create(path)
-  checkError(err)
-  svgFile = file
+  svgFile = btu.CreateFile(path)
   svgFile.WriteString(filterString(svgPrefix))
 }
 
@@ -34,5 +33,5 @@ func writeSvg(s string) {
 func closeSvg() {
   svgFile.WriteString(filterString(svgSuffix))
   err := svgFile.Close()
-  checkError(err)
+  btu.CheckError(err)
 }
