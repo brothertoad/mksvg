@@ -1,6 +1,7 @@
 package main
 
 import (
+  "fmt"
   "os"
   "github.com/brothertoad/btu"
 )
@@ -28,6 +29,10 @@ func openSvg(path string) {
 
 func writeSvg(s string) {
   svgFile.WriteString(s + "\n")
+}
+
+func writeSvgF(msg string, a ...any) {
+  fmt.Fprintf(svgFile, msg, a...)
 }
 
 func closeSvg() {
