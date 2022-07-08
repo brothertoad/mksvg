@@ -16,6 +16,9 @@ import (
 var webCommand = cli.Command {
   Name: "web",
   Usage: "create SVG file for the web",
+  Flags: []cli.Flag {
+    &cli.BoolFlag{Name: "points", Usage:"show points on curves"},
+  },
   Action: doWeb,
 }
 
@@ -32,11 +35,11 @@ func doWeb(c *cli.Context) error {
       for _, b := range(beziers) {
         writeSvg(`<path d="` + b + `"/>` + "\n")
       }
-      // Write dots to represent the knots.  Might want to make this
-      // controllable by command line flag.
-      for _, p := range(points) {
-        s := fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d"/>%s`, p.X, p.Y, radius, "\n")
-        writeSvg(s)
+      if c.Bool("points") {
+        for _, p := range(points) {
+          s := fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d"/>%s`, p.X, p.Y, radius, "\n")
+          writeSvg(s)
+        }
       }
     }
     for _, bezier := range(obj.Beziers) {
