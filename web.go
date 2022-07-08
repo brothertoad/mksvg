@@ -1,7 +1,6 @@
 package main
 
 import (
-  "fmt"
   "image"
   "path"
   "strconv"
@@ -37,8 +36,7 @@ func doWeb(c *cli.Context) error {
       }
       if c.Bool("points") {
         for _, p := range(points) {
-          s := fmt.Sprintf(`<circle cx="%d" cy="%d" r="%d"/>%s`, p.X, p.Y, radius, "\n")
-          writeSvg(s)
+          writeSvgF(`<circle cx="%d" cy="%d" r="%d"/>%s`, p.X, p.Y, radius, "\n")
         }
       }
     }
@@ -47,11 +45,9 @@ func doWeb(c *cli.Context) error {
       if len(points) != 4 {
         btu.Fatal("Wrong number of points (%d) in bezier '%s'\n", len(points), bezier)
       }
-      s := fmt.Sprintf(`<path d="M %d,%d C`, points[0].X, points[0].Y)
-      writeSvg(s)
+      writeSvgF(`<path d="M %d,%d C`, points[0].X, points[0].Y)
       for _, p := range(points[1:]) {
-        s := fmt.Sprintf(" %d,%d", p.X, p.Y)
-        writeSvg(s)
+        writeSvgF(" %d,%d", p.X, p.Y)
       }
       writeSvg(`"/>` + "\n")
     }
