@@ -39,6 +39,19 @@ func doWeb(c *cli.Context) error {
         writeSvg(s)
       }
     }
+    for _, bezier := range(obj.Beziers) {
+      points := stringToPoints(substitutePoints(bezier))
+      if len(points) != 4 {
+        btu.Fatal("Wrong number of points (%d) in bezier '%s'\n", len(points), bezier)
+      }
+      s := fmt.Sprintf(`<path d="M %d,%d C`, points[0].X, points[0].Y)
+      writeSvg(s)
+      for _, p := range(points[1:]) {
+        s := fmt.Sprintf(" %d,%d", p.X, p.Y)
+        writeSvg(s)
+      }
+      writeSvg(`"/>` + "\n")
+    }
     for _, line := range(obj.Lines) {
       // For each line, just find the point names and change them to the actual coordinates.
       writeSvg(`<polyline points="` + substitutePoints(line) + `"/>` + "\n")
