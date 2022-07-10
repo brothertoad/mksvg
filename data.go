@@ -4,7 +4,6 @@ import (
   "image"
   "image/jpeg"
   "io/ioutil"
-  "os"
   "github.com/pelletier/go-toml"
   "github.com/brothertoad/btu"
 )
@@ -64,9 +63,9 @@ func loadMask(path string) {
 }
 
 func loadImage(path string) {
-  reader, err := os.Open(path)
-  btu.CheckError(err)
+  reader := btu.OpenFile(path)
   defer reader.Close();
+  var err error
   mask.image, err = jpeg.Decode(reader)
   btu.CheckError(err)
   mask.width = mask.image.Bounds().Max.X - mask.image.Bounds().Min.X
