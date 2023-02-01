@@ -35,3 +35,8 @@ Use cli package.
 
 Output directory can be specified via flag on the command line, or environment
 variable.
+
+
+Tags:
+
+v0.1 - first cut, includes logic for background image and html file
