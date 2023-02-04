@@ -2,33 +2,51 @@ package main
 
 import (
   "image"
-  "image/jpeg"
+  _ "image/jpeg"
   "io/ioutil"
   "github.com/pelletier/go-toml"
   "github.com/brothertoad/btu"
 )
 
-type GlobalStruct struct {
+type GlobalInfo struct {
   Image string
   StrokeColor string
   StrokeWidth int
   Title string
   PrintName string
+  Width int
+  Height int
 }
 
-type ObjectStruct struct {
+type InputObject struct {
   Curves []string
   Beziers []string
   Lines []string
+  Rects []string
 }
 
+type curveInfo struct {
+  points []image.Point
+}
+
+type bezierInfo struct {
+  points [4]image.Point
+}
+
+type lineInfo struct {
+  points []image.Point
+}
+
+// Note that some fields in this object are read directly from the input file,
+// whereas others are computed.
 var mask struct {
-  Global GlobalStruct
+  Global GlobalInfo
   Points map[string]image.Point
-  Objects map[string]ObjectStruct
-  image image.Image
-  width int
-  height int
+  InputObjects map[string]InputObject
+  curves []curveInfo
+  beziers []bezierInfo
+  lines []lineInfo
+  rects []image.Rectangle
 }
 
 func loadMask(path string) {
@@ -40,15 +58,15 @@ func loadMask(path string) {
     mask.Global.PrintName = mask.Global.Title
   }
   // If there are not objects, there is nothing to do.
-  if mask.Objects == nil {
+  if mask.InputObjects == nil {
     btu.Fatal("No objects in mask file.\n")
   }
   // If there are no points defined, make Points an empty slice to ease error checking.
   if mask.Points == nil {
     mask.Points = make(map[string]image.Point)
   }
-  // If any curves, beziers or lines is nil, make it an empty slice to ease error checking.
-  for _, obj := range(mask.Objects) {
+  // If a list of items is nil, make it an empty slice to ease error checking.
+  for _, obj := range(mask.InputObjects) {
     if obj.Curves == nil {
       obj.Curves = make([]string, 0)
     }
@@ -58,16 +76,8 @@ func loadMask(path string) {
     if obj.Lines == nil {
       obj.Lines = make([]string, 0)
     }
+    if obj.Rects == nil {
+      obj.Rects = make([]string, 0)
+    }
   }
-  loadImage(mask.Global.Image)
-}
-
-func loadImage(path string) {
-  reader := btu.OpenFile(path)
-  defer reader.Close();
-  var err error
-  mask.image, err = jpeg.Decode(reader)
-  btu.CheckError(err)
-  mask.width = mask.image.Bounds().Max.X - mask.image.Bounds().Min.X
-  mask.height = mask.image.Bounds().Max.Y - mask.image.Bounds().Min.Y
 }

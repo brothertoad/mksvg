@@ -48,7 +48,7 @@ func filterString(src string) string {
   // changed to the image width.
   s := strings.ReplaceAll(src, "STROKE-COLOR", mask.Global.StrokeColor)
   s = strings.ReplaceAll(s, "STROKE-WIDTH", strconv.Itoa(mask.Global.StrokeWidth))
-  s = strings.ReplaceAll(s, "WIDTH", strconv.Itoa(mask.width))
-  s = strings.ReplaceAll(s, "HEIGHT", strconv.Itoa(mask.height))
+  s = strings.ReplaceAll(s, "WIDTH", strconv.Itoa(mask.Global.Width))
+  s = strings.ReplaceAll(s, "HEIGHT", strconv.Itoa(mask.Global.Height))
   return strings.ReplaceAll(s, "TITLE", mask.Global.Title)
 }

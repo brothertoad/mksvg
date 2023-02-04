@@ -14,6 +14,8 @@ import (
 var config struct {
   OutputDir string `yaml:"outputDir"`
   PointSize int `yaml:"pointSize"`
+  StrokeColor string `yaml:"strokeColor"`
+  StrokeWidth int `yaml:"strokeWidth"`
 }
 
 // Global data
@@ -34,13 +36,14 @@ func main() {
       &cli.StringFlag{Name: "output", Usage: "output file", Aliases: []string{"o"}, DefaultText: "mask.svg", Value: "mask.svg"},
       &cli.BoolFlag{Name: "print-points", Usage: "print the points", Aliases: []string{"p"}, Value: false, Destination: &args.printPoints},
     },
-    Before: initialize,
     Action: mksvg,
   }
   app.Run(os.Args)
 }
 
 func mksvg(c *cli.Context) error {
+  initialize(c)
+  loadMask(args.inputPath)
   return nil
 }
 
@@ -60,6 +63,5 @@ func initialize(c *cli.Context) error {
   btu.DirMustExist(config.OutputDir)
   args.outputPath = filepath.Join(config.OutputDir, c.String("output"))
   btu.Info("%+v\n", args)
-  loadMask(args.inputPath)
   return nil
 }
