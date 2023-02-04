@@ -4,6 +4,7 @@ import (
   "io/ioutil"
   "log"
   "os"
+  "path/filepath"
   "time"
   "github.com/urfave/cli/v2"
   "gopkg.in/yaml.v3"
@@ -12,9 +13,14 @@ import (
 
 var config struct {
   OutputDir string `yaml:"outputDir"`
-  TemplateDir string `yaml:"templateDir"`
-  // Not really part of config, but a global parameter
+  PointSize int `yaml:"pointSize"`
+}
+
+// Global data
+var args struct {
   inputPath string
+  outputPath string
+  printPoints bool
 }
 
 func main() {
@@ -24,19 +30,22 @@ func main() {
     Usage: "create an SVG file from a text file",
     Flags: []cli.Flag{
       &cli.StringFlag{Name: "config", Usage: "path to configuration file", Required: true, EnvVars: []string{"MKSVG_CONFIG"}},
-      &cli.StringFlag{Name: "input", Usage: "path to input file", Aliases: []string{"i"}, DefaultText: "mask.toml"},
-    },
-    Commands: []*cli.Command {
-      &initCommand,
-      &webCommand,
-      // need print command
+      &cli.StringFlag{Name: "input", Usage: "input file", Aliases: []string{"i"}, DefaultText: "mask.toml", Value: "mask.toml", Destination: &args.inputPath},
+      &cli.StringFlag{Name: "output", Usage: "output file", Aliases: []string{"o"}, DefaultText: "mask.svg", Value: "mask.svg"},
+      &cli.BoolFlag{Name: "print-points", Usage: "print the points", Aliases: []string{"p"}, Value: false, Destination: &args.printPoints},
     },
     Before: initialize,
+    Action: mksvg,
   }
   app.Run(os.Args)
 }
 
+func mksvg(c *cli.Context) error {
+  return nil
+}
+
 func initialize(c *cli.Context) error {
+  btu.SetLogLevel(btu.INFO)
   path := c.String("config")
   if !btu.FileExists(path) {
     log.Fatalf("Config file '%s' does not exist.\n", path)
@@ -46,17 +55,11 @@ func initialize(c *cli.Context) error {
   err = yaml.Unmarshal(b, &config)
   btu.CheckError(err)
   if len(config.OutputDir) == 0 {
-    log.Fatalf("No output directory specified in config file %s.\n", path)
+    config.OutputDir = "."
   }
   btu.DirMustExist(config.OutputDir)
-  if len(config.TemplateDir) == 0 {
-    log.Fatalf("No template directory specified in config file %s.\n", path)
-  }
-  btu.DirMustExist(config.TemplateDir)
-  config.inputPath = c.String("input")
-  if len(config.inputPath) == 0 {
-    config.inputPath = "mask.toml"
-  }
-  loadMask(config.inputPath)
+  args.outputPath = filepath.Join(config.OutputDir, c.String("output"))
+  btu.Info("%+v\n", args)
+  loadMask(args.inputPath)
   return nil
 }

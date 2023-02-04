@@ -1,12 +1,12 @@
 package main
 
 import (
-  "io/ioutil"
-  "path"
+  _ "io/ioutil"
+  _ "path"
   "strconv"
   "strings"
   "github.com/urfave/cli/v2"
-  "github.com/brothertoad/btu"
+  _ "github.com/brothertoad/btu"
 )
 
 var initCommand = cli.Command {
@@ -16,15 +16,18 @@ var initCommand = cli.Command {
 }
 
 func doInit(c *cli.Context) error {
+  /*
   filterTemplates("mask.html", "mask.css")
   dest := path.Join(config.OutputDir, "mask.jpg")
   btu.CopyFile(mask.Global.Image, dest)
   // Create an empty SVG file.
   openSvg(path.Join(config.OutputDir, "mask.svg"))
   closeSvg()
+  */
   return nil
 }
 
+/*
 func filterTemplates(templates ...string) {
   for _, template := range(templates) {
     inputPath := path.Join(config.TemplateDir, template)
@@ -38,6 +41,7 @@ func filterTemplates(templates ...string) {
 func filterBytes(src []byte) []byte {
   return []byte(filterString(string(src)))
 }
+*/
 
 func filterString(src string) string {
   // Have to do STROKE-WIDTH first, so the part after the hypen is not
