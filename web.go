@@ -25,7 +25,7 @@ const radius = 2
 
 func doWeb(c *cli.Context) error {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
-  for _, obj := range(mask.InputObjects) {
+  for _, obj := range(mask.Objects) {
     for _, curve := range(obj.Curves) {
       s := substitutePoints(curve)
       // At this point we have a list of space-separated points.

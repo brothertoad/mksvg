@@ -18,35 +18,43 @@ type GlobalInfo struct {
   Height int
 }
 
-type InputObject struct {
+type pointSlice struct {
+  points []image.Point
+}
+
+// The fields prefixed with "raw" are computed from the
+// corresponding non-raw fields.
+type Object struct {
   Curves []string
   Beziers []string
   Lines []string
   Rects []string
+  rawCurves []pointSlice
+  rawBeziers []pointSlice
+  rawLines []pointSlice
+  rawRects []image.Rectangle
 }
 
+/*
 type curveInfo struct {
   points []image.Point
 }
 
 type bezierInfo struct {
-  points [4]image.Point
+  points []image.Point
 }
 
 type lineInfo struct {
   points []image.Point
 }
+*/
 
 // Note that some fields in this object are read directly from the input file,
 // whereas others are computed.
 var mask struct {
   Global GlobalInfo
   Points map[string]image.Point
-  InputObjects map[string]InputObject
-  curves []curveInfo
-  beziers []bezierInfo
-  lines []lineInfo
-  rects []image.Rectangle
+  Objects map[string]Object
 }
 
 func loadMask(path string) {
@@ -58,7 +66,7 @@ func loadMask(path string) {
     mask.Global.PrintName = mask.Global.Title
   }
   // If there are not objects, there is nothing to do.
-  if mask.InputObjects == nil {
+  if mask.Objects == nil {
     btu.Fatal("No objects in mask file.\n")
   }
   // If there are no points defined, make Points an empty slice to ease error checking.
@@ -66,7 +74,7 @@ func loadMask(path string) {
     mask.Points = make(map[string]image.Point)
   }
   // If a list of items is nil, make it an empty slice to ease error checking.
-  for _, obj := range(mask.InputObjects) {
+  for _, obj := range(mask.Objects) {
     if obj.Curves == nil {
       obj.Curves = make([]string, 0)
     }
@@ -79,5 +87,13 @@ func loadMask(path string) {
     if obj.Rects == nil {
       obj.Rects = make([]string, 0)
     }
+  }
+  parseObjects()
+}
+
+// Parse the objects in the mask to actual numeric values.
+func parseObjects() {
+  for _, obj := range(mask.Objects) {
+    obj.rawCurves = make([]pointSlice, len(obj.Curves))
   }
 }
