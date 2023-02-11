@@ -53,7 +53,7 @@ var mask struct {
   Objects map[string]Object
 }
 
-func loadMask(path string) {
+func parseMask(path string) {
   b, err := ioutil.ReadFile(path)
   btu.CheckError(err)
   err = toml.Unmarshal(b, &mask)
