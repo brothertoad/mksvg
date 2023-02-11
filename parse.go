@@ -23,7 +23,11 @@ type GlobalInfo struct {
   Height int
 }
 
-type pointSlice []image.Point
+type pointCollection struct {
+    points []image.Point
+    center image.Point
+  }
+
 type rectangle struct {
   width, height int
 }
@@ -35,9 +39,9 @@ type Object struct {
   Beziers []string
   Lines []string
   Rects []string
-  rawCurves []pointSlice
-  rawBeziers []pointSlice
-  rawLines []pointSlice
+  rawCurves []pointCollection
+  rawBeziers []pointCollection
+  rawLines []pointCollection
   rawRects []rectangle
 }
 
@@ -79,23 +83,21 @@ func dumpObjects() {
   // Let's dump the objects.
   for name, obj := range(mask.Objects) {
     fmt.Printf("Dump of object %s\n", name)
-    fmt.Printf("    Curves: %+v\n", obj.Curves)
-    fmt.Printf("    Beziers: %+v\n", obj.Beziers)
-    fmt.Printf("    Lines: %+v\n", obj.Lines)
-    printPointSlices("raw curves", obj.rawCurves)
-    printPointSlices("raw beziers", obj.rawBeziers)
-    printPointSlices("raw lines", obj.rawLines)
+    printPointSlices("curves", obj.rawCurves)
+    printPointSlices("beziers", obj.rawBeziers)
+    printPointSlices("lines", obj.rawLines)
   }
 }
 
-func printPointSlices(label string, slices []pointSlice) {
+func printPointSlices(label string, collections []pointCollection) {
   fmt.Printf("    %s:\n", label)
-  for _, slice := range(slices) {
+  for _, pc := range(collections) {
     fmt.Print("     ")
-    for _, p := range(slice) {
-      fmt.Printf(" %d,%d", p.X, p.Y)
+    for _, p := range(pc.points) {
+      fmt.Printf(" (%d,%d)", p.X, p.Y)
     }
     fmt.Printf("\n")
+    fmt.Printf("     center %d,%d\n", pc.center.X, pc.center.Y)
   }
 }
 
@@ -111,11 +113,11 @@ func parseObjects() {
     rectsAsPoints := parsePointLists(obj.Rects)
     obj.rawRects = make([]rectangle, len(rectsAsPoints))
     for j, r := range(rectsAsPoints) {
-      if len(r) != 1 {
+      if len(r.points) != 1 {
         btu.Fatal("Found a rectangle with more than two coordinates\n")
       }
-      obj.rawRects[j].width = r[0].X
-      obj.rawRects[j].height = r[0].Y
+      obj.rawRects[j].width = r.points[0].X
+      obj.rawRects[j].height = r.points[0].Y
     }
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
@@ -125,10 +127,10 @@ func parseObjects() {
 
 // Parse a slice of strings, where each string is a list of points
 // (either by coordinates or by name).
-func parsePointLists(lists []string) []pointSlice {
-  slices := make([]pointSlice, 0)
+func parsePointLists(lists []string) []pointCollection {
+  collections := make([]pointCollection, 0)
   if lists == nil {
-    return slices
+    return collections
   }
   for _, list := range(lists) {
     words := strings.Split(list, " ")
@@ -136,21 +138,23 @@ func parsePointLists(lists []string) []pointSlice {
       btu.Warn("Found empty point list\n")
       continue
     }
-    slice := make([]image.Point, len(words))
+    var pc pointCollection
+    pc.points = make([]image.Point, len(words))
     for j, word := range(words) {
       // Each word is either a pair of coordinates (separated by a comma, with no
       // extra whitespace) or a point name.  Look at the first rune to determine
       // which of the two it is.
       rune, _ := utf8.DecodeRuneInString(word)
       if unicode.IsDigit(rune) {
-        slice[j] = parseCoordinates(word)
+        pc.points[j] = parseCoordinates(word)
       } else {
-        slice[j] = mask.Points[word]
+        pc.points[j] = mask.Points[word]
       }
     }
-    slices = append(slices, slice)
+    getPointCollectionCenter(&pc)
+    collections = append(collections, pc)
   }
-  return slices
+  return collections
 }
 
 func parseCoordinates(s string) image.Point {
@@ -165,4 +169,19 @@ func parseCoordinates(s string) image.Point {
   point.Y, err = strconv.Atoi(coords[1])
   btu.CheckError(err)
   return point
+}
+
+// This should probably be a method.
+func getPointCollectionCenter(pc *pointCollection) {
+  if len(pc.points) == 0 {
+    return  // just leave center as 0,0
+  }
+  sumx := 0
+  sumy := 0
+  for _, p := range(pc.points) {
+    sumx += p.X
+    sumy += p.Y
+  }
+  pc.center.X = sumx / len(pc.points)
+  pc.center.Y = sumy / len(pc.points)
 }

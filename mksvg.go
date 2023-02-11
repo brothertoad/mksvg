@@ -62,6 +62,6 @@ func initialize(c *cli.Context) error {
   }
   btu.DirMustExist(config.OutputDir)
   args.outputPath = filepath.Join(config.OutputDir, c.String("output"))
-  btu.Info("%+v\n", args)
+  // btu.Info("%+v\n", args)
   return nil
 }
