@@ -57,6 +57,16 @@ func writeCurveToSvg(curve pointCollection, center, translate image.Point) {
   }
 }
 
+func writeBezierToSvg(bezier pointCollection, center, translate image.Point) {
+  xoffset := translate.X - center.X
+  yoffset := translate.Y - center.Y
+  writeSvgF(`<path d="M %d %d `, bezier.points[0].X + xoffset, bezier.points[0].Y + yoffset)
+  writeSvgF(` C %d %d,`, bezier.points[1].X + xoffset, bezier.points[1].Y + yoffset)
+  writeSvgF(` %d %d,`, bezier.points[2].X + xoffset, bezier.points[2].Y + yoffset)
+  writeSvgF(` %d %d" fill="none"/>`, bezier.points[3].X + xoffset, bezier.points[3].Y + yoffset)
+  writeSvg("")  // to get a newline
+}
+
 func writeLineToSvg(line pointCollection, center, translate image.Point) {
   xoffset := translate.X - center.X
   yoffset := translate.Y - center.Y

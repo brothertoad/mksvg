@@ -21,6 +21,9 @@ func render() {
     for _, curve := range(obj.rawCurves) {
       writeCurveToSvg(curve, obj.center, render.Translate)
     }
+    for _, bezier := range(obj.rawBeziers) {
+      writeBezierToSvg(bezier, obj.center, render.Translate)
+    }
     for _, line := range(obj.rawLines) {
       writeLineToSvg(line, obj.center, render.Translate)
     }
