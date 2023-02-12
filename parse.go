@@ -32,6 +32,11 @@ type rectangle struct {
   width, height int
 }
 
+type PlacementInfo struct {
+  Translate image.Point
+  Flip      string
+}
+
 // The fields prefixed with "raw" are computed from the
 // corresponding non-raw fields.
 type Object struct {
@@ -39,6 +44,7 @@ type Object struct {
   Beziers []string
   Lines []string
   Rects []string
+  Placement PlacementInfo
   rawCurves []pointCollection
   rawBeziers []pointCollection
   rawLines []pointCollection
