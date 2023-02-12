@@ -44,38 +44,32 @@ func openSvg(path string) {
     mask.Global.StrokeColor, mask.Global.StrokeWidth)
 }
 
-func writeCurveToSvg(curve pointCollection, center, translate image.Point) {
-  xoffset := translate.X - center.X
-  yoffset := translate.Y - center.Y
+func writeCurveToSvg(curve pointCollection, offset image.Point) {
   beziers := bezier.GetControlPointsI(curve.points)
   for _, bezier := range(beziers) {
-    writeSvgF(`<path d="M %d %d `, bezier.P0.X + xoffset, bezier.P0.Y + yoffset)
-    writeSvgF(` C %d %d,`, bezier.P1.X + xoffset, bezier.P1.Y + yoffset)
-    writeSvgF(` %d %d,`, bezier.P2.X + xoffset, bezier.P2.Y + yoffset)
-    writeSvgF(` %d %d" fill="none"/>`, bezier.P3.X + xoffset, bezier.P3.Y + yoffset)
+    writeSvgF(`<path d="M %d %d `, bezier.P0.X + offset.X, bezier.P0.Y + offset.Y)
+    writeSvgF(` C %d %d,`, bezier.P1.X + offset.X, bezier.P1.Y + offset.Y)
+    writeSvgF(` %d %d,`, bezier.P2.X + offset.X, bezier.P2.Y + offset.Y)
+    writeSvgF(` %d %d" fill="none"/>`, bezier.P3.X + offset.X, bezier.P3.Y + offset.Y)
     writeSvg("")  // to get a newline
   }
 }
 
-func writeBezierToSvg(bezier pointCollection, center, translate image.Point) {
-  xoffset := translate.X - center.X
-  yoffset := translate.Y - center.Y
-  writeSvgF(`<path d="M %d %d `, bezier.points[0].X + xoffset, bezier.points[0].Y + yoffset)
-  writeSvgF(` C %d %d,`, bezier.points[1].X + xoffset, bezier.points[1].Y + yoffset)
-  writeSvgF(` %d %d,`, bezier.points[2].X + xoffset, bezier.points[2].Y + yoffset)
-  writeSvgF(` %d %d" fill="none"/>`, bezier.points[3].X + xoffset, bezier.points[3].Y + yoffset)
+func writeBezierToSvg(bezier pointCollection, offset image.Point) {
+  writeSvgF(`<path d="M %d %d `, bezier.points[0].X + offset.X, bezier.points[0].Y + offset.Y)
+  writeSvgF(` C %d %d,`, bezier.points[1].X + offset.X, bezier.points[1].Y + offset.Y)
+  writeSvgF(` %d %d,`, bezier.points[2].X + offset.X, bezier.points[2].Y + offset.Y)
+  writeSvgF(` %d %d" fill="none"/>`, bezier.points[3].X + offset.X, bezier.points[3].Y + offset.Y)
   writeSvg("")  // to get a newline
 }
 
-func writeLineToSvg(line pointCollection, center, translate image.Point) {
-  xoffset := translate.X - center.X
-  yoffset := translate.Y - center.Y
+func writeLineToSvg(line pointCollection, offset image.Point) {
   writeSvgF(`<polyline points="`)
   for j, p := range(line.points) {
     if j != 0 {
       writeSvgF(" ")
     }
-    writeSvgF("%d,%d", p.X + xoffset, p.Y + yoffset)
+    writeSvgF("%d,%d", p.X + offset.X, p.Y + offset.Y)
   }
   writeSvg(`" fill="none"/>`)
 }
