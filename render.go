@@ -16,6 +16,12 @@ const radius = 2
 
 func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
+  for _, render := range(mask.Renders) {
+    obj := mask.Objects[render.Object]
+    for _, line := range(obj.rawLines) {
+      writeLineToSvg(line, render.Translate)
+    }
+  }
   closeSvg()
 }
 

@@ -32,7 +32,8 @@ type rectangle struct {
   width, height int
 }
 
-type PlacementInfo struct {
+type RenderObject struct {
+  Object    string
   Translate image.Point
   Flip      string
 }
@@ -44,7 +45,6 @@ type Object struct {
   Beziers []string
   Lines []string
   Rects []string
-  Placement PlacementInfo
   rawCurves []pointCollection
   rawBeziers []pointCollection
   rawLines []pointCollection
@@ -57,6 +57,7 @@ var mask struct {
   Global GlobalInfo
   Points map[string]image.Point
   Objects map[string]Object
+  Renders []RenderObject
 }
 
 func parseMask(path string) {
@@ -72,7 +73,7 @@ func parseMask(path string) {
   if mask.Global.StrokeWidth == 0 {
     mask.Global.StrokeWidth = config.StrokeWidth
   }
-  
+
   if mask.Global.PrintName == "" {
     mask.Global.PrintName = mask.Global.Title
   }

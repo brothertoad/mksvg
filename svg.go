@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "image"
   "os"
   "github.com/brothertoad/btu"
 )
@@ -40,6 +41,19 @@ func openSvg(path string) {
   svgFile = btu.CreateFile(path)
   writeSvgF(svgPrefix, mask.Global.Width, mask.Global.Height, mask.Global.Width, mask.Global.Height,
     mask.Global.StrokeColor, mask.Global.StrokeWidth)
+}
+
+func writeLineToSvg(line pointCollection, center image.Point) {
+  xoffset := center.X - line.center.X
+  yoffset := center.Y - line.center.Y
+  writeSvgF(`<polyline points="`)
+  for j, p := range(line.points) {
+    if j != 0 {
+      writeSvgF(" ")
+    }
+    writeSvgF("%d,%d", p.X + xoffset, p.Y + yoffset)
+  }
+  writeSvg(`" fill="none"/>`)
 }
 
 func writeSvg(s string) {
