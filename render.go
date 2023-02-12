@@ -19,10 +19,10 @@ func render() {
   for _, render := range(mask.Renders) {
     obj := mask.Objects[render.Object]
     for _, curve := range(obj.rawCurves) {
-      writeCurveToSvg(curve, render.Translate)
+      writeCurveToSvg(curve, obj.center, render.Translate)
     }
     for _, line := range(obj.rawLines) {
-      writeLineToSvg(line, render.Translate)
+      writeLineToSvg(line, obj.center, render.Translate)
     }
   }
   closeSvg()

@@ -25,7 +25,7 @@ type GlobalInfo struct {
 
 type pointCollection struct {
     points []image.Point
-    center image.Point
+    // center image.Point
   }
 
 type rectangle struct {
@@ -49,6 +49,7 @@ type Object struct {
   rawBeziers []pointCollection
   rawLines []pointCollection
   rawRects []rectangle
+  center image.Point
 }
 
 // Note that some fields in this object are read directly from the input file,
@@ -113,7 +114,6 @@ func printPointSlices(label string, collections []pointCollection) {
       fmt.Printf(" (%d,%d)", p.X, p.Y)
     }
     fmt.Printf("\n")
-    fmt.Printf("     center %d,%d\n", pc.center.X, pc.center.Y)
   }
 }
 
@@ -135,6 +135,7 @@ func parseObjects() {
       obj.rawRects[j].width = r.points[0].X
       obj.rawRects[j].height = r.points[0].Y
     }
+    obj.center = getObjectCenter(obj)
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
     mask.Objects[name] = obj
@@ -167,7 +168,6 @@ func parsePointLists(lists []string) []pointCollection {
         pc.points[j] = mask.Points[word]
       }
     }
-    getPointCollectionCenter(&pc)
     collections = append(collections, pc)
   }
   return collections
@@ -188,16 +188,33 @@ func parseCoordinates(s string) image.Point {
 }
 
 // This should probably be a method.
-func getPointCollectionCenter(pc *pointCollection) {
-  if len(pc.points) == 0 {
-    return  // just leave center as 0,0
-  }
+func getObjectCenter(obj Object) image.Point{
   sumx := 0
   sumy := 0
-  for _, p := range(pc.points) {
-    sumx += p.X
-    sumy += p.Y
+  n := 0
+  for _, curve := range(obj.rawCurves) {
+    for _, p := range(curve.points) {
+      sumx += p.X
+      sumy += p.Y
+      n++
+    }
   }
-  pc.center.X = sumx / len(pc.points)
-  pc.center.Y = sumy / len(pc.points)
+  for _, bezier := range(obj.rawBeziers) {
+    for _, p := range(bezier.points) {
+      sumx += p.X
+      sumy += p.Y
+      n++
+    }
+  }
+  for _, line := range(obj.rawLines) {
+    for _, p := range(line.points) {
+      sumx += p.X
+      sumy += p.Y
+      n++
+    }
+  }
+  var c image.Point
+  c.X = sumx / n
+  c.Y = sumy / n
+  return c
 }
