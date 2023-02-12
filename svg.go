@@ -4,6 +4,7 @@ import (
   "fmt"
   "image"
   "os"
+  "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
 )
 
@@ -41,6 +42,19 @@ func openSvg(path string) {
   svgFile = btu.CreateFile(path)
   writeSvgF(svgPrefix, mask.Global.Width, mask.Global.Height, mask.Global.Width, mask.Global.Height,
     mask.Global.StrokeColor, mask.Global.StrokeWidth)
+}
+
+func writeCurveToSvg(curve pointCollection, center image.Point) {
+  xoffset := center.X - curve.center.X
+  yoffset := center.Y - curve.center.Y
+  beziers := bezier.GetControlPointsI(curve.points)
+  for _, bezier := range(beziers) {
+    writeSvgF(`<path d="M %d %d `, bezier.P0.X - xoffset, bezier.P0.Y - yoffset)
+    writeSvgF(` C %d %d,`, bezier.P1.X - xoffset, bezier.P1.Y - yoffset)
+    writeSvgF(` %d %d,`, bezier.P2.X - xoffset, bezier.P2.Y - yoffset)
+    writeSvgF(` %d %d" fill="none"/>`, bezier.P3.X - xoffset, bezier.P3.Y - yoffset)
+    writeSvg("")  // to get a newline
+  }
 }
 
 func writeLineToSvg(line pointCollection, center image.Point) {

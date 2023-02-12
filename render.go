@@ -18,6 +18,9 @@ func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
   for _, render := range(mask.Renders) {
     obj := mask.Objects[render.Object]
+    for _, curve := range(obj.rawCurves) {
+      writeCurveToSvg(curve, render.Translate)
+    }
     for _, line := range(obj.rawLines) {
       writeLineToSvg(line, render.Translate)
     }
