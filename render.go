@@ -30,6 +30,9 @@ func render() {
     for _, line := range(obj.rawLines) {
       writeLineToSvg(line, offset)
     }
+    for _, rect := range(obj.rawRects) {
+      writeRectangleToSvg(rect, offset)
+    }
   }
   closeSvg()
 }

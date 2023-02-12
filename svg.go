@@ -60,6 +60,13 @@ func writeLineToSvg(line pointCollection, offset image.Point) {
   writeSvg(`" fill="none"/>`)
 }
 
+func writeRectangleToSvg(rect image.Rectangle, offset image.Point) {
+  writeSvgF(`<rect x="%d" y="%d"`, rect.Min.X + offset.X, rect.Min.Y + offset.Y)
+  writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X + offset.X, rect.Max.Y - rect.Min.Y + offset.Y)
+  writeSvgF(`fill="none"/>`)
+  writeSvg("")  // to get a newline
+}
+
 func writeSvg(s string) {
   svgFile.WriteString(s + "\n")
 }

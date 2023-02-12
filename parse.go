@@ -28,13 +28,10 @@ type pointCollection struct {
     // center image.Point
   }
 
-type rectangle struct {
-  width, height int
-}
-
 type RenderObject struct {
   Object    string
   Translate image.Point
+  // Need to add scale.
   Flip      string
 }
 
@@ -48,7 +45,7 @@ type Object struct {
   rawCurves []pointCollection
   rawBeziers []pointCollection
   rawLines []pointCollection
-  rawRects []rectangle
+  rawRects []image.Rectangle
   center image.Point
 }
 
@@ -123,17 +120,16 @@ func parseObjects() {
     obj.rawCurves = parsePointLists(obj.Curves)
     obj.rawBeziers = parsePointLists(obj.Beziers)
     obj.rawLines = parsePointLists(obj.Lines)
-    //  Each rectangle just has a width and a height, so we will parse
+    //  Each rectangle consists of two points, so we will parse
     // the rectangles as if they were points.  Then we check that each
-    // rectangle consists of a single point.
+    // rectangle consists of exactly two points.
     rectsAsPoints := parsePointLists(obj.Rects)
-    obj.rawRects = make([]rectangle, len(rectsAsPoints))
+    obj.rawRects = make([]image.Rectangle, len(rectsAsPoints))
     for j, r := range(rectsAsPoints) {
-      if len(r.points) != 1 {
-        btu.Fatal("Found a rectangle with more than two coordinates\n")
+      if len(r.points) != 2 {
+        btu.Fatal("Found a rectangle with more than two points\n")
       }
-      obj.rawRects[j].width = r.points[0].X
-      obj.rawRects[j].height = r.points[0].Y
+      obj.rawRects[j] = image.Rectangle{r.points[0], r.points[1]}
     }
     obj.center = getObjectCenter(obj)
     // OK, work around the fact that obj is a *copy* of the entry in
