@@ -12,16 +12,12 @@ import (
   "github.com/brothertoad/btu"
 )
 
-var webCommand = cli.Command {
-  Name: "web",
-  Usage: "create SVG file for the web",
-  Flags: []cli.Flag {
-    &cli.BoolFlag{Name: "points", Usage:"show points on curves"},
-  },
-  Action: doWeb,
-}
-
 const radius = 2
+
+func render() {
+  openSvg(path.Join(config.OutputDir, "mask.svg"))
+  closeSvg()
+}
 
 func doWeb(c *cli.Context) error {
   openSvg(path.Join(config.OutputDir, "mask.svg"))

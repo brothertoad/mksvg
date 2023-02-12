@@ -64,10 +64,19 @@ func parseMask(path string) {
   btu.CheckError(err)
   err = toml.Unmarshal(b, &mask)
   btu.CheckError(err)
+
+  // Get values from config, if necessary.
+  if mask.Global.StrokeColor == "" {
+    mask.Global.StrokeColor = config.StrokeColor
+  }
+  if mask.Global.StrokeWidth == 0 {
+    mask.Global.StrokeWidth = config.StrokeWidth
+  }
+  
   if mask.Global.PrintName == "" {
     mask.Global.PrintName = mask.Global.Title
   }
-  // If there are not objects, there is nothing to do.
+  // If there are no objects, there is nothing to do.
   if mask.Objects == nil {
     btu.Fatal("No objects in mask file.\n")
   }

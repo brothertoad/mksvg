@@ -44,6 +44,7 @@ func main() {
 func mksvg(c *cli.Context) error {
   initialize(c)
   parseMask(args.inputPath)
+  render()
   return nil
 }
 
