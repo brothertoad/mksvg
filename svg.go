@@ -26,7 +26,7 @@ var svgFile *os.File
 
 func openSvg(path string) {
   svgFile = btu.CreateFile(path)
-  writeSvgF(svgPrefix, mask.Global.Width, mask.Global.Height, mask.Global.Width, mask.Global.Height,
+  writeSvgF(svgPrefix, mask.Global.Width, mask.Global.Height, 10 * mask.Global.Width, 10 * mask.Global.Height,
     mask.Global.StrokeColor, mask.Global.StrokeWidth)
 }
 
@@ -36,7 +36,7 @@ func writeCurveToSvg(curve pointCollection, offset image.Point) {
     writeSvgF(`<path d="M %d %d `, bezier.P0.X + offset.X, bezier.P0.Y + offset.Y)
     writeSvgF(` C %d %d,`, bezier.P1.X + offset.X, bezier.P1.Y + offset.Y)
     writeSvgF(` %d %d,`, bezier.P2.X + offset.X, bezier.P2.Y + offset.Y)
-    writeSvgF(` %d %d" transform="scale(0.1)" fill="none"/>`, bezier.P3.X + offset.X, bezier.P3.Y + offset.Y)
+    writeSvgF(` %d %d" transform="scale(1)" fill="none"/>`, bezier.P3.X + offset.X, bezier.P3.Y + offset.Y)
     writeSvg("")  // to get a newline
   }
 }
@@ -45,7 +45,7 @@ func writeBezierToSvg(bezier pointCollection, offset image.Point) {
   writeSvgF(`<path d="M %d %d `, bezier.points[0].X + offset.X, bezier.points[0].Y + offset.Y)
   writeSvgF(` C %d %d,`, bezier.points[1].X + offset.X, bezier.points[1].Y + offset.Y)
   writeSvgF(` %d %d,`, bezier.points[2].X + offset.X, bezier.points[2].Y + offset.Y)
-  writeSvgF(` %d %d" transform="scale(0.1)" fill="none"/>`, bezier.points[3].X + offset.X, bezier.points[3].Y + offset.Y)
+  writeSvgF(` %d %d" transform="scale(1)" fill="none"/>`, bezier.points[3].X + offset.X, bezier.points[3].Y + offset.Y)
   writeSvg("")  // to get a newline
 }
 
@@ -57,13 +57,13 @@ func writeLineToSvg(line pointCollection, offset image.Point) {
     }
     writeSvgF("%d,%d", p.X + offset.X, p.Y + offset.Y)
   }
-  writeSvg(`" transform="scale(0.1)" fill="none"/>`)
+  writeSvg(`" transform="scale(1)" fill="none"/>`)
 }
 
 func writeRectangleToSvg(rect image.Rectangle, offset image.Point) {
   writeSvgF(`<rect x="%d" y="%d"`, rect.Min.X + offset.X, rect.Min.Y + offset.Y)
   writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X + offset.X, rect.Max.Y - rect.Min.Y + offset.Y)
-  writeSvgF(`transform="scale(0.1)" fill="none"/>`)
+  writeSvgF(`transform="scale(1)" fill="none"/>`)
   writeSvg("")  // to get a newline
 }
 
