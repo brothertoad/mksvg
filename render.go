@@ -28,7 +28,7 @@ func render() {
       writeBezierToSvg(bezier, offset)
     }
     for _, line := range(obj.rawLines) {
-      writeLineToSvg(line, offset)
+      writeLineToSvg(line, obj.center, render)
     }
     for _, rect := range(obj.rawRects) {
       writeRectangleToSvg(rect, offset)

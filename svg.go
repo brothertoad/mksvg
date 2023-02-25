@@ -49,15 +49,16 @@ func writeBezierToSvg(bezier pointCollection, offset image.Point) {
   writeSvg("")  // to get a newline
 }
 
-func writeLineToSvg(line pointCollection, offset image.Point) {
+func writeLineToSvg(line pointCollection, center image.Point, render RenderObject) {
   writeSvgF(`<polyline points="`)
   for j, p := range(line.points) {
     if j != 0 {
       writeSvgF(" ")
     }
-    writeSvgF("%d,%d", p.X + offset.X, p.Y + offset.Y)
+    writeSvgF("%d,%d", p.X - center.X, p.Y - center.Y)
   }
-  writeSvg(`" transform="scale(1)" fill="none"/>`)
+  writeSvgF(`" transform="translate(%d,%d)%s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+  writeSvg("")
 }
 
 func writeRectangleToSvg(rect image.Rectangle, offset image.Point) {
@@ -65,6 +66,14 @@ func writeRectangleToSvg(rect image.Rectangle, offset image.Point) {
   writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X + offset.X, rect.Max.Y - rect.Min.Y + offset.Y)
   writeSvgF(`transform="scale(1)" fill="none"/>`)
   writeSvg("")  // to get a newline
+}
+
+func createScaleString(render RenderObject) string {
+  if render.Scale == 0.0 {
+    return ""
+  }
+  // TASK: need to include flip if specified
+  return fmt.Sprintf(" scale(%.2f)", render.Scale)
 }
 
 func writeSvg(s string) {
