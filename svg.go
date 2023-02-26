@@ -71,6 +71,11 @@ func writeRectangleToSvg(rect image.Rectangle, center image.Point, render Render
   writeSvg("")  // to get a newline
 }
 
+func writePlainRectangleToSvg(x, y, width, height int) {
+  writeSvgF(`<rect x="%d" y="%d" width="%d" height="%d" fill="none"/>`, x, y, width, height)
+  writeSvg("")
+}
+
 func createScaleString(render RenderObject) string {
   if render.Scale == 0.0  && render.Flip == "" {
     return ""
@@ -79,7 +84,6 @@ func createScaleString(render RenderObject) string {
   if scale == 0.0 {
     scale = 1.0
   }
-  // TASK: need to include flip if specified
   switch render.Flip {
   case "":
     return fmt.Sprintf("scale(%.3f)", scale)

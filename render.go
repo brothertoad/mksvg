@@ -13,6 +13,7 @@ import (
 )
 
 const radius = 2
+const margin = 5
 
 func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
@@ -30,6 +31,11 @@ func render() {
     for _, rect := range(obj.rawRects) {
       writeRectangleToSvg(rect, obj.center, render)
     }
+  }
+  if args.printBorder {
+    w := mask.Global.Width * 10 - 2 * margin
+    h := mask.Global.Height * 10 - 2 * margin
+    writePlainRectangleToSvg(margin, margin, w, h)
   }
   closeSvg()
 }

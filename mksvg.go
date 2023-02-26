@@ -23,6 +23,7 @@ var args struct {
   inputPath string
   outputPath string
   printPoints bool
+  printBorder bool
 }
 
 func main() {
@@ -34,7 +35,8 @@ func main() {
       &cli.StringFlag{Name: "config", Usage: "path to configuration file", Required: true, EnvVars: []string{"MKSVG_CONFIG"}},
       &cli.StringFlag{Name: "input", Usage: "input file", Aliases: []string{"i"}, DefaultText: "mask.toml", Value: "mask.toml", Destination: &args.inputPath},
       &cli.StringFlag{Name: "output", Usage: "output file", Aliases: []string{"o"}, DefaultText: "mask.svg", Value: "mask.svg"},
-      &cli.BoolFlag{Name: "print-points", Usage: "print the points", Aliases: []string{"p"}, Value: false, Destination: &args.printPoints},
+      &cli.BoolFlag{Name: "points", Usage: "print the points", Aliases: []string{"p"}, Value: false, Destination: &args.printPoints},
+      &cli.BoolFlag{Name: "border", Usage: "print a border", Aliases: []string{"b"}, Value: false, Destination: &args.printBorder},
     },
     Action: mksvg,
   }
