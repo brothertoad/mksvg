@@ -30,22 +30,24 @@ func openSvg(path string) {
     mask.Global.StrokeColor, mask.Global.StrokeWidth)
 }
 
-func writeCurveToSvg(curve pointCollection, offset image.Point) {
+func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject) {
   beziers := bezier.GetControlPointsI(curve.points)
   for _, bezier := range(beziers) {
-    writeSvgF(`<path d="M %d %d `, bezier.P0.X + offset.X, bezier.P0.Y + offset.Y)
-    writeSvgF(` C %d %d,`, bezier.P1.X + offset.X, bezier.P1.Y + offset.Y)
-    writeSvgF(` %d %d,`, bezier.P2.X + offset.X, bezier.P2.Y + offset.Y)
-    writeSvgF(` %d %d" transform="scale(1)" fill="none"/>`, bezier.P3.X + offset.X, bezier.P3.Y + offset.Y)
+    writeSvgF(`<path d="M %d %d `, bezier.P0.X - center.X, bezier.P0.Y - center.Y)
+    writeSvgF(` C %d %d,`, bezier.P1.X - center.X, bezier.P1.Y- center.Y)
+    writeSvgF(` %d %d,`, bezier.P2.X - center.X, bezier.P2.Y - center.Y)
+    writeSvgF(` %d %d"`, bezier.P3.X - center.X, bezier.P3.Y - center.Y)
+    writeSvgF(` transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
     writeSvg("")  // to get a newline
   }
 }
 
-func writeBezierToSvg(bezier pointCollection, offset image.Point) {
-  writeSvgF(`<path d="M %d %d `, bezier.points[0].X + offset.X, bezier.points[0].Y + offset.Y)
-  writeSvgF(` C %d %d,`, bezier.points[1].X + offset.X, bezier.points[1].Y + offset.Y)
-  writeSvgF(` %d %d,`, bezier.points[2].X + offset.X, bezier.points[2].Y + offset.Y)
-  writeSvgF(` %d %d" transform="scale(1)" fill="none"/>`, bezier.points[3].X + offset.X, bezier.points[3].Y + offset.Y)
+func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderObject) {
+  writeSvgF(`<path d="M %d %d `, bezier.points[0].X - center.X, bezier.points[0].Y - center.Y)
+  writeSvgF(` C %d %d,`, bezier.points[1].X - center.X, bezier.points[1].Y - center.Y)
+  writeSvgF(` %d %d,`, bezier.points[2].X - center.X, bezier.points[2].Y - center.Y)
+  writeSvgF(` %d %d"`, bezier.points[3].X - center.X, bezier.points[3].Y - center.Y)
+  writeSvgF(` transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
   writeSvg("")  // to get a newline
 }
 
@@ -57,14 +59,14 @@ func writeLineToSvg(line pointCollection, center image.Point, render RenderObjec
     }
     writeSvgF("%d,%d", p.X - center.X, p.Y - center.Y)
   }
-  writeSvgF(`" transform="translate(%d,%d)%s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+  writeSvgF(`" transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
   writeSvg("")
 }
 
-func writeRectangleToSvg(rect image.Rectangle, offset image.Point) {
-  writeSvgF(`<rect x="%d" y="%d"`, rect.Min.X + offset.X, rect.Min.Y + offset.Y)
-  writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X + offset.X, rect.Max.Y - rect.Min.Y + offset.Y)
-  writeSvgF(`transform="scale(1)" fill="none"/>`)
+func writeRectangleToSvg(rect image.Rectangle, center image.Point, render RenderObject) {
+  writeSvgF(`<rect x="%d" y="%d"`, rect.Min.X - center.X, rect.Min.Y - center.Y)
+  writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X - center.X, rect.Max.Y - rect.Min.Y - center.Y)
+  writeSvgF(`transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
   writeSvg("")  // to get a newline
 }
 
@@ -73,7 +75,7 @@ func createScaleString(render RenderObject) string {
     return ""
   }
   // TASK: need to include flip if specified
-  return fmt.Sprintf(" scale(%.2f)", render.Scale)
+  return fmt.Sprintf("scale(%.2f)", render.Scale)
 }
 
 func writeSvg(s string) {

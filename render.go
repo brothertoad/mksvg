@@ -18,20 +18,17 @@ func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
   for _, render := range(mask.Renders) {
     obj := mask.Objects[render.Object]
-    var offset image.Point
-    offset.X = render.Translate.X - obj.center.X
-    offset.Y = render.Translate.Y - obj.center.Y
     for _, curve := range(obj.rawCurves) {
-      writeCurveToSvg(curve, offset)
+      writeCurveToSvg(curve, obj.center, render)
     }
     for _, bezier := range(obj.rawBeziers) {
-      writeBezierToSvg(bezier, offset)
+      writeBezierToSvg(bezier, obj.center, render)
     }
     for _, line := range(obj.rawLines) {
       writeLineToSvg(line, obj.center, render)
     }
     for _, rect := range(obj.rawRects) {
-      writeRectangleToSvg(rect, offset)
+      writeRectangleToSvg(rect, obj.center, render)
     }
   }
   closeSvg()
