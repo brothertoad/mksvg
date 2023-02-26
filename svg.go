@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "image"
+  "log"
   "os"
   "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
@@ -71,11 +72,24 @@ func writeRectangleToSvg(rect image.Rectangle, center image.Point, render Render
 }
 
 func createScaleString(render RenderObject) string {
-  if render.Scale == 0.0 {
+  if render.Scale == 0.0  && render.Flip == "" {
     return ""
   }
+  scale := render.Scale
+  if scale == 0.0 {
+    scale = 1.0
+  }
   // TASK: need to include flip if specified
-  return fmt.Sprintf("scale(%.2f)", render.Scale)
+  switch render.Flip {
+  case "":
+    return fmt.Sprintf("scale(%.3f)", scale)
+  case "hflip":
+    return fmt.Sprintf("scale(%.3f,%.3f)", - scale, scale)
+  case "vflip":
+    return fmt.Sprintf("scale(%.3f,%.3f)", scale, - scale)
+  }
+  log.Fatalf("Invalid flip value: %s\n", render.Flip)
+  return ""
 }
 
 func writeSvg(s string) {
