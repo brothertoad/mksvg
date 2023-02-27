@@ -32,7 +32,7 @@ func render() {
       writeRectangleToSvg(rect, obj.center, render)
     }
   }
-  if args.printBorder {
+  if config.printBorder {
     w := mask.Global.Width * 10 - 2 * margin
     h := mask.Global.Height * 10 - 2 * margin
     writePlainRectangleToSvg(margin, margin, w, h)
