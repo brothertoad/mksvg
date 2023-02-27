@@ -33,13 +33,21 @@ func openSvg(path string) {
 
 func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject) {
   beziers := bezier.GetControlPointsI(curve.points)
+  scale := createScaleString(render)
   for _, bezier := range(beziers) {
     writeSvgF(`<path d="M %d %d `, bezier.P0.X - center.X, bezier.P0.Y - center.Y)
     writeSvgF(` C %d %d,`, bezier.P1.X - center.X, bezier.P1.Y- center.Y)
     writeSvgF(` %d %d,`, bezier.P2.X - center.X, bezier.P2.Y - center.Y)
     writeSvgF(` %d %d"`, bezier.P3.X - center.X, bezier.P3.Y - center.Y)
-    writeSvgF(` transform="translate(%d,%d) %s"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+    writeSvgF(` transform="translate(%d,%d) %s"/>`, render.Translate.X, render.Translate.Y, scale)
     writeSvg("")  // to get a newline
+  }
+  if config.printPoints {
+    for _, p := range(curve.points) {
+      writeSvgF(`<circle cx="%d" cy="%d" r="%d"`, p.X - center.X, p.Y - center.Y, radius)
+      writeSvgF(` transform="translate(%d,%d) %s" fill="%s"/>`, render.Translate.X, render.Translate.Y, scale, config.StrokeColor)
+      writeSvg("")
+    }
   }
 }
 
