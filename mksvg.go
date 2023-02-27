@@ -16,6 +16,7 @@ import (
 var config struct {
   OutputDir string
   PointRadius int
+  MarginEdge int
   StrokeColor string
   StrokeWidth int
   inputPath string
@@ -62,7 +63,12 @@ func initialize(c *cli.Context) error {
     config.OutputDir = "."
   }
   btu.DirMustExist(config.OutputDir)
+  if config.PointRadius == 0 {
+    config.PointRadius = 2
+  }
+  if config.MarginEdge == 0 {
+    config.MarginEdge = 5
+  }
   config.outputPath = filepath.Join(config.OutputDir, c.String("output"))
-  // btu.Info("%+v\n", args)
   return nil
 }

@@ -10,7 +10,7 @@ import (
   "github.com/brothertoad/btu"
 )
 
-const margin = 5
+// const margin = 5
 
 func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
@@ -35,9 +35,9 @@ func render() {
     writeSvg("")
   }
   if config.printBorder {
-    w := mask.Global.Width * 10 - 2 * margin
-    h := mask.Global.Height * 10 - 2 * margin
-    writePlainRectangleToSvg(margin, margin, w, h)
+    w := mask.Global.Width * 10 - 2 * config.MarginEdge
+    h := mask.Global.Height * 10 - 2 * config.MarginEdge
+    writePlainRectangleToSvg(config.MarginEdge, config.MarginEdge, w, h)
   }
   closeSvg()
 }
