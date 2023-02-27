@@ -15,6 +15,9 @@ import (
 func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
   for _, render := range(mask.Renders) {
+    if render.Hide {
+      continue
+    }
     if render.Comment != "" {
       writeSvgF(`<!-- %s -->`, render.Comment)
       writeSvg("")
