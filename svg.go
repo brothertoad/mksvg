@@ -38,7 +38,7 @@ func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObj
     writeSvgF(` C %d %d,`, bezier.P1.X - center.X, bezier.P1.Y- center.Y)
     writeSvgF(` %d %d,`, bezier.P2.X - center.X, bezier.P2.Y - center.Y)
     writeSvgF(` %d %d"`, bezier.P3.X - center.X, bezier.P3.Y - center.Y)
-    writeSvgF(` transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+    writeSvgF(` transform="translate(%d,%d) %s"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
     writeSvg("")  // to get a newline
   }
 }
@@ -48,7 +48,7 @@ func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderO
   writeSvgF(` C %d %d,`, bezier.points[1].X - center.X, bezier.points[1].Y - center.Y)
   writeSvgF(` %d %d,`, bezier.points[2].X - center.X, bezier.points[2].Y - center.Y)
   writeSvgF(` %d %d"`, bezier.points[3].X - center.X, bezier.points[3].Y - center.Y)
-  writeSvgF(` transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+  writeSvgF(` transform="translate(%d,%d) %s"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
   writeSvg("")  // to get a newline
 }
 
@@ -60,19 +60,19 @@ func writeLineToSvg(line pointCollection, center image.Point, render RenderObjec
     }
     writeSvgF("%d,%d", p.X - center.X, p.Y - center.Y)
   }
-  writeSvgF(`" transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+  writeSvgF(`" transform="translate(%d,%d) %s"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
   writeSvg("")
 }
 
 func writeRectangleToSvg(rect image.Rectangle, center image.Point, render RenderObject) {
   writeSvgF(`<rect x="%d" y="%d"`, rect.Min.X - center.X, rect.Min.Y - center.Y)
   writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X - center.X, rect.Max.Y - rect.Min.Y - center.Y)
-  writeSvgF(`transform="translate(%d,%d) %s" fill="none"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
+  writeSvgF(`transform="translate(%d,%d) %s"/>`, render.Translate.X, render.Translate.Y, createScaleString(render))
   writeSvg("")  // to get a newline
 }
 
 func writePlainRectangleToSvg(x, y, width, height int) {
-  writeSvgF(`<rect x="%d" y="%d" width="%d" height="%d" fill="none"/>`, x, y, width, height)
+  writeSvgF(`<rect x="%d" y="%d" width="%d" height="%d"/>`, x, y, width, height)
   writeSvg("")
 }
 
