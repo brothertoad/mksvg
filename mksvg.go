@@ -7,17 +7,17 @@ import (
   "path/filepath"
   "time"
   "github.com/urfave/cli/v2"
-  "gopkg.in/yaml.v3"
+  "github.com/pelletier/go-toml"
   "github.com/brothertoad/btu"
 )
 
 // This structure holds values from the configuration file
 // and values from command line arguments.
 var config struct {
-  OutputDir string `yaml:"outputDir"`
-  PointSize int `yaml:"pointSize"`
-  StrokeColor string `yaml:"strokeColor"`
-  StrokeWidth int `yaml:"strokeWidth"`
+  OutputDir string
+  PointSize int
+  StrokeColor string
+  StrokeWidth int
   inputPath string
   outputPath string
   printPoints bool
@@ -56,7 +56,7 @@ func initialize(c *cli.Context) error {
   }
   b, err := ioutil.ReadFile(path)
   btu.CheckError(err)
-  err = yaml.Unmarshal(b, &config)
+  err = toml.Unmarshal(b, &config)
   btu.CheckError(err)
   if len(config.OutputDir) == 0 {
     config.OutputDir = "."
