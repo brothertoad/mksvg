@@ -30,6 +30,7 @@ type pointCollection struct {
 
 type RenderObject struct {
   Object    string
+  Comment   string
   Translate image.Point
   Scale     float64
   Flip      string

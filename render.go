@@ -18,6 +18,10 @@ const margin = 5
 func render() {
   openSvg(path.Join(config.OutputDir, "mask.svg"))
   for _, render := range(mask.Renders) {
+    if render.Comment != "" {
+      writeSvgF(`<!-- %s -->`, render.Comment)
+      writeSvg("")
+    }
     obj := mask.Objects[render.Object]
     for _, curve := range(obj.rawCurves) {
       writeCurveToSvg(curve, obj.center, render)
@@ -31,6 +35,7 @@ func render() {
     for _, rect := range(obj.rawRects) {
       writeRectangleToSvg(rect, obj.center, render)
     }
+    writeSvg("")
   }
   if config.printBorder {
     w := mask.Global.Width * 10 - 2 * margin
