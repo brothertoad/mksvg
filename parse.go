@@ -13,53 +13,6 @@ import (
   "github.com/brothertoad/btu"
 )
 
-type GlobalInfo struct {
-  Image string
-  StrokeColor string
-  StrokeWidth int
-  Title string
-  PrintName string
-  Width int
-  Height int
-}
-
-type pointCollection struct {
-    points []image.Point
-    // center image.Point
-  }
-
-type RenderObject struct {
-  Object    string
-  Comment   string
-  Hide      bool
-  Translate image.Point
-  Scale     float64
-  Flip      string
-}
-
-// The fields prefixed with "raw" are computed from the
-// corresponding non-raw fields.
-type Object struct {
-  Curves []string
-  Beziers []string
-  Lines []string
-  Rects []string
-  rawCurves []pointCollection
-  rawBeziers []pointCollection
-  rawLines []pointCollection
-  rawRects []image.Rectangle
-  center image.Point
-}
-
-// Note that some fields in this object are read directly from the input file,
-// whereas others are computed.
-var mask struct {
-  Global GlobalInfo
-  Points map[string]image.Point
-  Objects map[string]Object
-  Renders []RenderObject
-}
-
 func parseMask(path string) {
   b, err := ioutil.ReadFile(path)
   btu.CheckError(err)

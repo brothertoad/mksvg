@@ -11,20 +11,6 @@ import (
   "github.com/brothertoad/btu"
 )
 
-// This structure holds values from the configuration file
-// and values from command line arguments.
-var config struct {
-  OutputDir string
-  PointRadius int
-  MarginEdge int
-  StrokeColor string
-  StrokeWidth int
-  inputPath string
-  outputPath string
-  printPoints bool
-  printBorder bool
-}
-
 func main() {
   app := &cli.App{
     Name: "mksvg",
