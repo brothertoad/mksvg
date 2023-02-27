@@ -1,7 +1,5 @@
 Tasks:
 
-Allow comments in source file.
-
 Need sub commands: prep, web and print.  Prep copies the image file and writes the HTML,
 CSS and SVG files.  Web just refreshes the SVG, and includes dots for the points.
 Print creates a scaled image for the cutter.  Maybe add logic to web includes items
@@ -11,30 +9,10 @@ Need to specify background image.  App will copy this to output directory with a
 name that the HTML references.  App will also read the dimensions of this file and use
 them for the SVG.
 
-Specify stroke color.
-
 Need to put dimensions of image in CSS and HTML files as well as SVG file.  It might
 be easiest to run sed in an external process.  Correction: use Substitute in strings
 package.
 
-A list of points, with ID's.  This allows a given point to be used in more than one place,
-and be easily changed.
-
-A list of objects.  Objects can contain curves and/or poly-lines.  App will find the
-bounding rectangle of each object, and use the center of that rectangle as center of
-the object.  This center is used for translation/rotation/flipping.
-
-The output.  A list of objects, with a possible translation/rotation/flipping for each.
-Perhaps scaling for each.
-
-
-
-Done:
-
-Use cli package.
-
-Output directory can be specified via flag on the command line, or environment
-variable.
 
 
 Tags:
