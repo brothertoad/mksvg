@@ -7,12 +7,9 @@ import (
   "strings"
   "unicode"
   "unicode/utf8"
-  "github.com/urfave/cli/v2"
-  "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
 )
 
-const radius = 2
 const margin = 5
 
 func render() {
@@ -43,43 +40,6 @@ func render() {
     writePlainRectangleToSvg(margin, margin, w, h)
   }
   closeSvg()
-}
-
-func doWeb(c *cli.Context) error {
-  openSvg(path.Join(config.OutputDir, "mask.svg"))
-  for _, obj := range(mask.Objects) {
-    for _, curve := range(obj.Curves) {
-      s := substitutePoints(curve)
-      // At this point we have a list of space-separated points.
-      points := stringToPoints(s)
-      beziers := bezier.SvgControlPointsI(points)
-      for _, b := range(beziers) {
-        writeSvg(`<path d="` + b + `"/>` + "\n")
-      }
-      if c.Bool("points") {
-        for _, p := range(points) {
-          writeSvgF(`<circle cx="%d" cy="%d" r="%d"/>%s`, p.X, p.Y, radius, "\n")
-        }
-      }
-    }
-    for _, bezier := range(obj.Beziers) {
-      points := stringToPoints(substitutePoints(bezier))
-      if len(points) != 4 {
-        btu.Fatal("Wrong number of points (%d) in bezier '%s'\n", len(points), bezier)
-      }
-      writeSvgF(`<path d="M %d,%d C`, points[0].X, points[0].Y)
-      for _, p := range(points[1:]) {
-        writeSvgF(" %d,%d", p.X, p.Y)
-      }
-      writeSvg(`"/>` + "\n")
-    }
-    for _, line := range(obj.Lines) {
-      // For each line, just find the point names and change them to the actual coordinates.
-      writeSvg(`<polyline points="` + substitutePoints(line) + `"/>` + "\n")
-    }
-  }
-  closeSvg()
-  return nil
 }
 
 func substitutePoints(s string) string {

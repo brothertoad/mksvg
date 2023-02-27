@@ -15,7 +15,7 @@ import (
 // and values from command line arguments.
 var config struct {
   OutputDir string
-  PointSize int
+  PointRadius int
   StrokeColor string
   StrokeWidth int
   inputPath string

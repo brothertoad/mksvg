@@ -18,6 +18,9 @@ var svgPrefix =`<?xml version="1.0" standalone="no"?>
     stroke: %s;
     stroke-width: %d;
   }
+  .dot {
+    fill: %s;
+  }
   </style>
 `
 var svgSuffix = `</svg>
@@ -28,7 +31,7 @@ var svgFile *os.File
 func openSvg(path string) {
   svgFile = btu.CreateFile(path)
   writeSvgF(svgPrefix, mask.Global.Width, mask.Global.Height, 10 * mask.Global.Width, 10 * mask.Global.Height,
-    mask.Global.StrokeColor, mask.Global.StrokeWidth)
+    mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
 }
 
 func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject) {
@@ -87,14 +90,14 @@ func writePointsToSvg(points []image.Point, center image.Point, xform string) {
     return
   }
   for _, p := range(points) {
-    writeSvgF(`<circle cx="%d" cy="%d" r="%d"`, p.X - center.X, p.Y - center.Y, radius)
+    writeSvgF(`<circle class="dot" cx="%d" cy="%d" r="%d"`, p.X - center.X, p.Y - center.Y, config.PointRadius)
     writeSvgF(` %s fill="%s"/>`, xform, config.StrokeColor)
     writeSvg("")
   }
 }
 
 func createTransformString(render RenderObject) string {
-  return fmt.Sprintf(`transform="translate(%d,%d) %s"`, render.Translate.X, render.Translate.Y, createScaleString(render))
+  return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, createScaleString(render))
 }
 
 func createScaleString(render RenderObject) string {
@@ -107,11 +110,11 @@ func createScaleString(render RenderObject) string {
   }
   switch render.Flip {
   case "":
-    return fmt.Sprintf("scale(%.3f)", scale)
+    return fmt.Sprintf(" scale(%.3f)", scale)
   case "hflip":
-    return fmt.Sprintf("scale(%.3f,%.3f)", - scale, scale)
+    return fmt.Sprintf(" scale(%.3f,%.3f)", - scale, scale)
   case "vflip":
-    return fmt.Sprintf("scale(%.3f,%.3f)", scale, - scale)
+    return fmt.Sprintf(" scale(%.3f,%.3f)", scale, - scale)
   }
   log.Fatalf("Invalid flip value: %s\n", render.Flip)
   return ""
