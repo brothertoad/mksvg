@@ -22,6 +22,7 @@ func main() {
       &cli.StringFlag{Name: "output", Usage: "output file", Aliases: []string{"o"}, DefaultText: "mask.svg", Value: "mask.svg"},
       &cli.BoolFlag{Name: "points", Usage: "print the points", Aliases: []string{"p"}, Value: false, Destination: &config.printPoints},
       &cli.BoolFlag{Name: "border", Usage: "print a border", Aliases: []string{"b"}, Value: false, Destination: &config.printBorder},
+      &cli.StringFlag{Name: "image", Usage: "set background image"},
     },
     Action: mksvg,
   }
@@ -31,11 +32,14 @@ func main() {
 func mksvg(c *cli.Context) error {
   initialize(c)
   parseMask(config.inputPath)
+  if c.String("image") != "" {
+    initFromImage(c.String("image"))
+  }
   render()
   return nil
 }
 
-func initialize(c *cli.Context) error {
+func initialize(c *cli.Context) {
   btu.SetLogLevel(btu.INFO)
   path := c.String("config")
   if !btu.FileExists(path) {
@@ -56,5 +60,4 @@ func initialize(c *cli.Context) error {
     config.MarginEdge = 5
   }
   config.outputPath = filepath.Join(config.OutputDir, c.String("output"))
-  return nil
 }
