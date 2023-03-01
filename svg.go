@@ -4,6 +4,7 @@ import (
   "fmt"
   "image"
   "log"
+  "math"
   "os"
   "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
@@ -30,8 +31,17 @@ var svgFile *os.File
 
 func openSvg(path string) {
   svgFile = btu.CreateFile(path)
-  writeSvgF(svgPrefix, mask.Global.Width, mask.Global.Height, 10 * mask.Global.Width, 10 * mask.Global.Height,
-    mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
+  w := mask.Global.Width
+  h := mask.Global.Height
+  if mask.Global.Scale != 0.0 {
+    w = int(math.Round(float64(w) * mask.Global.Scale))
+    h = int(math.Round(float64(h) * mask.Global.Scale))
+  }
+  writeSvgF(svgPrefix, w, h, 10 * w, 10 * h, mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
+  if mask.Global.Scale != 0.0 {
+    writeSvgF(`<g transform="scale(%.3f)">`, mask.Global.Scale)
+    writeSvg("")
+  }
 }
 
 func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject) {
@@ -128,6 +138,9 @@ func writeSvgF(msg string, a ...any) {
 }
 
 func closeSvg() {
+  if mask.Global.Scale != 0.0 {
+    writeSvg("</g>")
+  }
   svgFile.WriteString(svgSuffix)
   err := svgFile.Close()
   btu.CheckError(err)

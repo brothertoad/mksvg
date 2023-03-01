@@ -27,6 +27,7 @@ type GlobalInfo struct {
   StrokeWidth int
   Title string
   PrintName string
+  Scale float64
   Width int
   Height int
 }
