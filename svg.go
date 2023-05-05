@@ -48,7 +48,7 @@ func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObj
   beziers := bezier.GetControlPointsI(curve.points)
   xform := createTransformString(render)
   for _, bezier := range(beziers) {
-    writeSvgF(`<path d="M %d %d `, bezier.P0.X - center.X, bezier.P0.Y - center.Y)
+    writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, bezier.P0.X - center.X, bezier.P0.Y - center.Y)
     writeSvgF(` C %d %d,`, bezier.P1.X - center.X, bezier.P1.Y- center.Y)
     writeSvgF(` %d %d,`, bezier.P2.X - center.X, bezier.P2.Y - center.Y)
     writeSvgF(` %d %d"`, bezier.P3.X - center.X, bezier.P3.Y - center.Y)
@@ -60,7 +60,7 @@ func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObj
 
 func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderObject) {
   xform := createTransformString(render)
-  writeSvgF(`<path d="M %d %d `, bezier.points[0].X - center.X, bezier.points[0].Y - center.Y)
+  writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, bezier.points[0].X - center.X, bezier.points[0].Y - center.Y)
   writeSvgF(` C %d %d,`, bezier.points[1].X - center.X, bezier.points[1].Y - center.Y)
   writeSvgF(` %d %d,`, bezier.points[2].X - center.X, bezier.points[2].Y - center.Y)
   writeSvgF(` %d %d"`, bezier.points[3].X - center.X, bezier.points[3].Y - center.Y)
@@ -71,7 +71,7 @@ func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderO
 
 func writeLineToSvg(line pointCollection, center image.Point, render RenderObject) {
   xform := createTransformString(render)
-  writeSvgF(`<polyline points="`)
+  writeSvgF(`<polyline vector-effect="non-scaling-stroke" points="`)
   for j, p := range(line.points) {
     if j != 0 {
       writeSvgF(" ")
@@ -84,14 +84,14 @@ func writeLineToSvg(line pointCollection, center image.Point, render RenderObjec
 }
 
 func writeRectangleToSvg(rect image.Rectangle, center image.Point, render RenderObject) {
-  writeSvgF(`<rect x="%d" y="%d"`, rect.Min.X - center.X, rect.Min.Y - center.Y)
+  writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d"`, rect.Min.X - center.X, rect.Min.Y - center.Y)
   writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X - center.X, rect.Max.Y - rect.Min.Y - center.Y)
   writeSvgF(`%s/>`, createTransformString(render))
   writeSvg("")  // to get a newline
 }
 
 func writePlainRectangleToSvg(x, y, width, height int) {
-  writeSvgF(`<rect x="%d" y="%d" width="%d" height="%d"/>`, x, y, width, height)
+  writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d" width="%d" height="%d"/>`, x, y, width, height)
   writeSvg("")
 }
 
@@ -100,7 +100,7 @@ func writePointsToSvg(points []image.Point, center image.Point, xform string) {
     return
   }
   for _, p := range(points) {
-    writeSvgF(`<circle class="dot" cx="%d" cy="%d" r="%d" %s/>`, p.X - center.X, p.Y - center.Y, config.PointRadius, xform)
+    writeSvgF(`<circle vector-effect="non-scaling-stroke" class="dot" cx="%d" cy="%d" r="%d" %s/>`, p.X - center.X, p.Y - center.Y, config.PointRadius, xform)
     writeSvg("")
   }
 }
