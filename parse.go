@@ -138,8 +138,70 @@ func parseCoordinates(s string) image.Point {
   return point
 }
 
+// This finds the center of the bounding rectangle of the object.
 // This should probably be a method.
-func getObjectCenter(obj Object) image.Point{
+func getObjectCenter(obj Object) image.Point {
+  xmin := 2000000000
+  xmax := -2000000000
+  ymin := 2000000000
+  ymax := -2000000000
+  for _, curve := range(obj.rawCurves) {
+    for _, p := range(curve.points) {
+      if p.X < xmin {
+        xmin = p.X
+      }
+      if p.Y < ymin {
+        ymin = p.Y
+      }
+      if p.X > xmax {
+        xmax = p.X
+      }
+      if p.Y > ymax {
+        ymax = p.Y
+      }
+    }
+  }
+  for _, bezier := range(obj.rawBeziers) {
+    for _, p := range(bezier.points) {
+      if p.X < xmin {
+        xmin = p.X
+      }
+      if p.Y < ymin {
+        ymin = p.Y
+      }
+      if p.X > xmax {
+        xmax = p.X
+      }
+      if p.Y > ymax {
+        ymax = p.Y
+      }
+    }
+  }
+  for _, line := range(obj.rawLines) {
+    for _, p := range(line.points) {
+      if p.X < xmin {
+        xmin = p.X
+      }
+      if p.Y < ymin {
+        ymin = p.Y
+      }
+      if p.X > xmax {
+        xmax = p.X
+      }
+      if p.Y > ymax {
+        ymax = p.Y
+      }
+    }
+  }
+  var c image.Point
+  c.X = (xmin + xmax) / 2
+  c.Y = (ymin + ymax) / 2
+  return c
+}
+
+// This was the original way of getting the center of an object,
+// namely by finding the center of gravity of all the points.
+func getObjectCentroid(obj Object) image.Point {
   sumx := 0
   sumy := 0
   n := 0
