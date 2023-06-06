@@ -52,6 +52,7 @@ type Object struct {
   Beziers []string
   Lines []string
   Rects []string
+  Scale float64
   rawCurves []pointCollection
   rawBeziers []pointCollection
   rawLines []pointCollection

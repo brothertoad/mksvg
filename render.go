@@ -15,17 +15,18 @@ func render() {
       writeSvg("")
     }
     obj := mask.Objects[render.Object]
+    xform := createTransformString(render, obj)
     for _, curve := range(obj.rawCurves) {
-      writeCurveToSvg(curve, obj.center, render)
+      writeCurveToSvg(curve, obj.center, render, xform)
     }
     for _, bezier := range(obj.rawBeziers) {
-      writeBezierToSvg(bezier, obj.center, render)
+      writeBezierToSvg(bezier, obj.center, render, xform)
     }
     for _, line := range(obj.rawLines) {
-      writeLineToSvg(line, obj.center, render)
+      writeLineToSvg(line, obj.center, render, xform)
     }
     for _, rect := range(obj.rawRects) {
-      writeRectangleToSvg(rect, obj.center, render)
+      writeRectangleToSvg(rect, obj.center, render, xform)
     }
     writeSvg("")
   }

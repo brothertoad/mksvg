@@ -44,9 +44,9 @@ func openSvg(path string) {
   }
 }
 
-func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject) {
+func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject, xform string) {
   beziers := bezier.GetControlPointsI(curve.points)
-  xform := createTransformString(render)
+  // xform := createTransformString(render)
   for _, bezier := range(beziers) {
     writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, bezier.P0.X - center.X, bezier.P0.Y - center.Y)
     writeSvgF(` C %d %d,`, bezier.P1.X - center.X, bezier.P1.Y- center.Y)
@@ -58,8 +58,8 @@ func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObj
   writePointsToSvg(curve.points, center, xform)
 }
 
-func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderObject) {
-  xform := createTransformString(render)
+func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderObject, xform string) {
+  // xform := createTransformString(render)
   writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, bezier.points[0].X - center.X, bezier.points[0].Y - center.Y)
   writeSvgF(` C %d %d,`, bezier.points[1].X - center.X, bezier.points[1].Y - center.Y)
   writeSvgF(` %d %d,`, bezier.points[2].X - center.X, bezier.points[2].Y - center.Y)
@@ -69,8 +69,8 @@ func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderO
   writePointsToSvg(bezier.points, center, xform)
 }
 
-func writeLineToSvg(line pointCollection, center image.Point, render RenderObject) {
-  xform := createTransformString(render)
+func writeLineToSvg(line pointCollection, center image.Point, render RenderObject, xform string) {
+  // xform := createTransformString(render)
   writeSvgF(`<polyline vector-effect="non-scaling-stroke" points="`)
   for j, p := range(line.points) {
     if j != 0 {
@@ -83,10 +83,11 @@ func writeLineToSvg(line pointCollection, center image.Point, render RenderObjec
   writePointsToSvg(line.points, center, xform)
 }
 
-func writeRectangleToSvg(rect image.Rectangle, center image.Point, render RenderObject) {
+func writeRectangleToSvg(rect image.Rectangle, center image.Point, render RenderObject, xform string) {
   writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d"`, rect.Min.X - center.X, rect.Min.Y - center.Y)
   writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X - center.X, rect.Max.Y - rect.Min.Y - center.Y)
-  writeSvgF(`%s/>`, createTransformString(render))
+  // writeSvgF(`%s/>`, createTransformString(render))
+  writeSvgF(`%s/>`, xform)
   writeSvg("")  // to get a newline
 }
 
@@ -105,17 +106,20 @@ func writePointsToSvg(points []image.Point, center image.Point, xform string) {
   }
 }
 
-func createTransformString(render RenderObject) string {
-  return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, createScaleString(render))
+func createTransformString(render RenderObject, object Object) string {
+  return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, createScaleString(render, object))
 }
 
-func createScaleString(render RenderObject) string {
-  if render.Scale == 0.0  && render.Flip == "" {
+func createScaleString(render RenderObject, object Object) string {
+  if render.Scale == 0.0 && object.Scale == 0.0 && render.Flip == "" {
     return ""
   }
   scale := render.Scale
   if scale == 0.0 {
     scale = 1.0
+  }
+  if object.Scale != 0.0 {
+    scale *= object.Scale
   }
   switch render.Flip {
   case "":
