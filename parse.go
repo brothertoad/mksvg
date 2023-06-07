@@ -76,6 +76,7 @@ func parseObjects() {
   for name, obj := range(mask.Objects) {
     obj.rawCurves = parsePointLists(obj.Curves)
     obj.rawBeziers = parsePointLists(obj.Beziers)
+    obj.rawQBeziers = parsePointLists(obj.QBeziers)
     obj.rawLines = parsePointLists(obj.Lines)
     //  Each rectangle consists of two points, so we will parse
     // the rectangles as if they were points.  Then we check that each

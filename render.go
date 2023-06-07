@@ -22,6 +22,9 @@ func render() {
     for _, bezier := range(obj.rawBeziers) {
       writeBezierToSvg(bezier, obj.center, render, xform)
     }
+    for _, qbezier := range(obj.rawQBeziers) {
+      writeQBezierToSvg(qbezier, obj.center, render, xform)
+    }
     for _, line := range(obj.rawLines) {
       writeLineToSvg(line, obj.center, render, xform)
     }

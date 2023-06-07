@@ -49,11 +49,13 @@ type RenderObject struct {
 type Object struct {
   Curves []string
   Beziers []string
+  QBeziers []string
   Lines []string
   Rects []string
   Scale float64
   rawCurves []pointCollection
   rawBeziers []pointCollection
+  rawQBeziers []pointCollection
   rawLines []pointCollection
   rawRects []image.Rectangle
   center image.Point
