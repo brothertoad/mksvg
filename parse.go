@@ -13,11 +13,13 @@ import (
   "github.com/brothertoad/btu"
 )
 
-func parseMask(path string) {
-  b, err := ioutil.ReadFile(path)
-  btu.CheckError(err)
-  err = toml.Unmarshal(b, &mask)
-  btu.CheckError(err)
+func parseMask(paths []string) {
+  for _, path := range(paths) {
+    b, err := ioutil.ReadFile(path)
+    btu.CheckError(err)
+    err = toml.Unmarshal(b, &mask)
+    btu.CheckError(err)
+  }
 
   // Get values from config, if necessary.
   if mask.Global.StrokeColor == "" {

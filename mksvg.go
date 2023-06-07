@@ -33,7 +33,7 @@ func main() {
 func mksvg(c *cli.Context) error {
   initialize(c)
   args := getArgs(c)
-  parseMask(args[0])
+  parseMask(args)
   if c.String("image") != "" {
     initFromImage(c.String("image"))
   }
