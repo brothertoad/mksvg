@@ -38,5 +38,8 @@ func render() {
     h := mask.Global.Height * 10 - 2 * config.MarginEdge
     writePlainRectangleToSvg(config.MarginEdge, config.MarginEdge, w, h)
   }
+  if config.printGrid {
+    
+  }
   closeSvg()
 }

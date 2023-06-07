@@ -18,6 +18,7 @@ var config struct {
   outputPath string
   printPoints bool
   printBorder bool
+  printGrid bool
 }
 
 type GlobalInfo struct {
