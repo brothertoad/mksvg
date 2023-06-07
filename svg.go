@@ -111,6 +111,11 @@ func writePointsToSvg(points []image.Point, center image.Point, xform string) {
   }
 }
 
+func writeGridToSvg(x, y, width, height, spacing int) {
+  // writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d" width="%d" height="%d"/>`, x, y, width, height)
+  writeSvg("")
+}
+
 func createTransformString(render RenderObject, object Object) string {
   return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, createScaleString(render, object))
 }

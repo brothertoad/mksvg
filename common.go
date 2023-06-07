@@ -13,6 +13,7 @@ var config struct {
   OutputDir string
   PointRadius int
   MarginEdge int
+  GridSpacing int
   StrokeColor string
   StrokeWidth int
   outputPath string

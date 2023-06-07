@@ -33,13 +33,17 @@ func render() {
     }
     writeSvg("")
   }
+  w := mask.Global.Width * 10 - 2 * config.MarginEdge
+  h := mask.Global.Height * 10 - 2 * config.MarginEdge
   if config.printBorder {
-    w := mask.Global.Width * 10 - 2 * config.MarginEdge
-    h := mask.Global.Height * 10 - 2 * config.MarginEdge
     writePlainRectangleToSvg(config.MarginEdge, config.MarginEdge, w, h)
   }
   if config.printGrid {
-    
+    spacing := config.GridSpacing
+    if spacing == 0 {
+      spacing = 10
+    }
+    writeGridToSvg(config.MarginEdge, config.MarginEdge, w, h, spacing)
   }
   closeSvg()
 }
