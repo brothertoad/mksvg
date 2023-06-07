@@ -15,7 +15,6 @@ var config struct {
   MarginEdge int
   StrokeColor string
   StrokeWidth int
-  inputPath string
   outputPath string
   printPoints bool
   printBorder bool

@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bufio"
   "io/ioutil"
   "log"
   "os"
@@ -18,7 +19,7 @@ func main() {
     Usage: "create an SVG file from a text file",
     Flags: []cli.Flag{
       &cli.StringFlag{Name: "config", Usage: "path to configuration file", Required: true, EnvVars: []string{"MKSVG_CONFIG"}},
-      &cli.StringFlag{Name: "input", Usage: "input file", Aliases: []string{"i"}, DefaultText: "mask.toml", Value: "mask.toml", Destination: &config.inputPath},
+      &cli.StringFlag{Name: "list", Usage: "file containing list of input files", Aliases: []string{"l"}},
       &cli.StringFlag{Name: "output", Usage: "output file", Aliases: []string{"o"}, DefaultText: "mask.svg", Value: "mask.svg"},
       &cli.BoolFlag{Name: "points", Usage: "print the points", Aliases: []string{"p"}, Value: false, Destination: &config.printPoints},
       &cli.BoolFlag{Name: "border", Usage: "print a border", Aliases: []string{"b"}, Value: false, Destination: &config.printBorder},
@@ -31,12 +32,31 @@ func main() {
 
 func mksvg(c *cli.Context) error {
   initialize(c)
-  parseMask(config.inputPath)
+  args := getArgs(c)
+  parseMask(args[0])
   if c.String("image") != "" {
     initFromImage(c.String("image"))
   }
   render()
   return nil
+}
+
+func getArgs(c *cli.Context) []string {
+  args := c.Args().Slice()
+  listPath := c.String("list")
+  if listPath != "" {
+    f := btu.OpenFile(listPath)
+    defer f.Close()
+    scanner := bufio.NewScanner(f)
+    for scanner.Scan() {
+      args = append(args, scanner.Text())
+    }
+  }
+  if len(args) == 0 {
+    // default is mask.toml
+    args = append(args, "mask.toml")
+  }
+  return args
 }
 
 func initialize(c *cli.Context) {
