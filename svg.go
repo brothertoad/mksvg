@@ -112,7 +112,16 @@ func writePointsToSvg(points []image.Point, center image.Point, xform string) {
 }
 
 func writeGridToSvg(x, y, width, height, spacing int) {
-  // writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d" width="%d" height="%d"/>`, x, y, width, height)
+  rows := height / spacing;
+  cols := width / spacing;
+  for r := 0; r < rows; r++ {
+    writeSvgF(`<line vector-effect="non-scaling-stroke" x1="%d" y1="%d" x2="%d" y2="%d"/>`, x, y + r * spacing, x + width, y + r * spacing)
+    writeSvg("")
+  }
+  for c := 0; c < cols; c++ {
+    writeSvgF(`<line vector-effect="non-scaling-stroke" x1="%d" y1="%d" x2="%d" y2="%d"/>`, x + c * spacing, y, x + c * spacing, y + height)
+    writeSvg("")
+  }
   writeSvg("")
 }
 

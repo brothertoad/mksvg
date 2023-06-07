@@ -41,7 +41,7 @@ func render() {
   if config.printGrid {
     spacing := config.GridSpacing
     if spacing == 0 {
-      spacing = 10
+      spacing = 25
     }
     writeGridToSvg(config.MarginEdge, config.MarginEdge, w, h, spacing)
   }
