@@ -12,7 +12,7 @@ import (
 
 var svgPrefix =`<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="%dmm" height="%dmm" viewBox="0 0 %d %d" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink">
+<svg width="%s" height="%s" viewBox="0 0 %d %d" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink">
   <style>
   :root {
     fill: none;
@@ -37,7 +37,7 @@ func openSvg(path string) {
     w = int(math.Round(float64(w) * mask.Global.Scale))
     h = int(math.Round(float64(h) * mask.Global.Scale))
   }
-  writeSvgF(svgPrefix, w, h, 10 * w, 10 * h, mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
+  writeSvgF(svgPrefix, mask.Global.PhysicalWidth, mask.Global.PhysicalHeight, w, h, mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
   if mask.Global.Scale != 0.0 {
     writeSvgF(`<g transform="scale(%.3f)">`, mask.Global.Scale)
     writeSvg("")

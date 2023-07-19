@@ -29,6 +29,8 @@ type GlobalInfo struct {
   Title string
   PrintName string
   Scale float64
+  PhysicalWidth string
+  PhysicalHeight string
   Width int
   Height int
 }
