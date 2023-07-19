@@ -6,6 +6,7 @@ import (
   "log"
   "math"
   "os"
+  "strconv"
   "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
 )
@@ -31,17 +32,39 @@ var svgFile *os.File
 
 func openSvg(path string) {
   svgFile = btu.CreateFile(path)
+  pw := mask.Global.PhysicalWidth
+  ph := mask.Global.PhysicalHeight
   w := mask.Global.Width
   h := mask.Global.Height
   if mask.Global.Scale != 0.0 {
+    pw = scalePhysicalDimension(pw, mask.Global.Scale)
+    ph = scalePhysicalDimension(ph, mask.Global.Scale)
     w = int(math.Round(float64(w) * mask.Global.Scale))
     h = int(math.Round(float64(h) * mask.Global.Scale))
   }
-  writeSvgF(svgPrefix, mask.Global.PhysicalWidth, mask.Global.PhysicalHeight, w, h, mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
+  writeSvgF(svgPrefix, pw, ph, w, h, mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
   if mask.Global.Scale != 0.0 {
     writeSvgF(`<g transform="scale(%.3f)">`, mask.Global.Scale)
     writeSvg("")
   }
+}
+
+// We assume the physical dimension is all ASCII (i.e., no Unicode).
+func scalePhysicalDimension(dimension string, scale float64) string {
+  // Get the numeric part of the dimension.
+  var n int // index of units
+  for j, c := range(dimension) {
+     if c >= '0' && c <= '9' {
+       continue
+     }
+     n = j
+     break
+  }
+  i, err := strconv.Atoi(dimension[0:n])
+  btu.CheckError(err)
+  units := dimension[n:]
+  i = int(math.Round(float64(i) * scale))
+  return fmt.Sprintf("%d%s", i, units)
 }
 
 func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject, xform string) {

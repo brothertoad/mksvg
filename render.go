@@ -33,8 +33,8 @@ func render() {
     }
     writeSvg("")
   }
-  w := mask.Global.Width * 10 - 2 * config.MarginEdge
-  h := mask.Global.Height * 10 - 2 * config.MarginEdge
+  w := mask.Global.Width - 2 * config.MarginEdge
+  h := mask.Global.Height - 2 * config.MarginEdge
   if config.printBorder {
     writePlainRectangleToSvg(config.MarginEdge, config.MarginEdge, w, h)
   }
