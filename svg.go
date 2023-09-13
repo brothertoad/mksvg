@@ -6,7 +6,6 @@ import (
   "log"
   "math"
   "os"
-  "strconv"
   "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
 )
@@ -60,8 +59,7 @@ func scalePhysicalDimension(dimension string, scale float64) string {
      n = j
      break
   }
-  i, err := strconv.Atoi(dimension[0:n])
-  btu.CheckError(err)
+  i := btu.Atoi(dimension[0:n])
   units := dimension[n:]
   i = int(math.Round(float64(i) * scale))
   return fmt.Sprintf("%d%s", i, units)

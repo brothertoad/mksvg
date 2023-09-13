@@ -5,7 +5,6 @@ import (
   "image"
   _ "image/jpeg"
   "io/ioutil"
-  "strconv"
   "strings"
   "unicode"
   "unicode/utf8"
@@ -133,11 +132,8 @@ func parseCoordinates(s string) image.Point {
   if len(coords) != 2 {
     btu.Fatal("Expected two coordinates in point\n")
   }
-  var err error
-  point.X, err = strconv.Atoi(coords[0])
-  btu.CheckError(err)
-  point.Y, err = strconv.Atoi(coords[1])
-  btu.CheckError(err)
+  point.X = btu.Atoi(coords[0])
+  point.Y = btu.Atoi(coords[1])
   return point
 }
 
