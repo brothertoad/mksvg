@@ -197,36 +197,3 @@ func getObjectCenter(obj Object) image.Point {
   c.Y = (ymin + ymax) / 2
   return c
 }
-
-// This was the original way of getting the center of an object,
-// namely by finding the center of gravity of all the points.
-func getObjectCentroid(obj Object) image.Point {
-  sumx := 0
-  sumy := 0
-  n := 0
-  for _, curve := range(obj.rawCurves) {
-    for _, p := range(curve.points) {
-      sumx += p.X
-      sumy += p.Y
-      n++
-    }
-  }
-  for _, bezier := range(obj.rawBeziers) {
-    for _, p := range(bezier.points) {
-      sumx += p.X
-      sumy += p.Y
-      n++
-    }
-  }
-  for _, line := range(obj.rawLines) {
-    for _, p := range(line.points) {
-      sumx += p.X
-      sumy += p.Y
-      n++
-    }
-  }
-  var c image.Point
-  c.X = sumx / n
-  c.Y = sumy / n
-  return c
-}
