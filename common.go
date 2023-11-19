@@ -63,6 +63,7 @@ type Object struct {
   rawLines []pointCollection
   rawRects []image.Rectangle
   center image.Point
+  d string // valud of the d attribute of an SVG path element
 }
 
 // Note that some fields in this object are read directly from the input file,
