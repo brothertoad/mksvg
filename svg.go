@@ -65,6 +65,11 @@ func scalePhysicalDimension(dimension string, scale float64) string {
   return fmt.Sprintf("%d%s", i, units)
 }
 
+func writePathToSvg(d string, xform string) {
+  writeSvgF(`<path vector-effect="non-scaling-stroke" d="%s" %s/>`, d, xform)
+  writeSvg("")  // to get a newline
+}
+
 func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject, xform string) {
   beziers := bezier.GetControlPointsI(curve.points)
   for _, bezier := range(beziers) {

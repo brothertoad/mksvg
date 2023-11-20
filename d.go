@@ -33,7 +33,7 @@ func createD(obj Object) string {
   }
   // We will return a move to the start of the first segment, followed by
   // the d of each segment.
-  d := fmt.Sprintf("M %d,%d", segments[0].start.X, segments[0].start.Y)
+  d := fmt.Sprintf("M %d,%d", segments[0].start.X - obj.center.X, segments[0].start.Y - obj.center.Y)
   for _, segment := range(segments) {
     d = fmt.Sprintf("%s%s", d, segment.d)
   }

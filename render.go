@@ -16,6 +16,8 @@ func render() {
     }
     obj := mask.Objects[render.Object]
     xform := createTransformString(render, obj)
+    writePathToSvg(obj.d, xform)
+    /*
     for _, curve := range(obj.rawCurves) {
       writeCurveToSvg(curve, obj.center, render, xform)
     }
@@ -32,6 +34,7 @@ func render() {
       writeRectangleToSvg(rect, obj.center, render, xform)
     }
     writeSvg("")
+    */
   }
   w := mask.Global.Width - 2 * config.MarginEdge
   h := mask.Global.Height - 2 * config.MarginEdge
