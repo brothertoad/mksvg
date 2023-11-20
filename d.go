@@ -80,7 +80,7 @@ func createCurveSegment(curve pointCollection, center image.Point) segmentInfo {
   segment.end = beziers[len(beziers)-1].P3
   d := ""
   for _, bezier := range(beziers) {
-    d = fmt.Sprintf("%s C %d %d, %d %d, %d %d", bezier.P1.X - center.X, bezier.P1.Y- center.Y,
+    d = fmt.Sprintf("%s C %d %d, %d %d, %d %d", d, bezier.P1.X - center.X, bezier.P1.Y- center.Y,
       bezier.P2.X - center.X, bezier.P2.Y - center.Y, bezier.P3.X - center.X, bezier.P3.Y - center.Y)
   }
   segment.d = d
@@ -92,7 +92,7 @@ func createBezierSegment(bezier pointCollection, center image.Point) segmentInfo
   p := bezier.points
   segment.start = p[0]
   segment.end = p[3]
-  segment.d = fmt.Sprintf("C %d %d, %d %d, %d %d", p[1].X - center.X, p[1].Y - center.Y,
+  segment.d = fmt.Sprintf(" C %d %d, %d %d, %d %d", p[1].X - center.X, p[1].Y - center.Y,
     p[2].X - center.X, p[2].Y - center.Y, p[3].X - center.X, p[3].Y - center.Y)
   return segment
 }
@@ -102,7 +102,7 @@ func createQBezierSegment(qbezier pointCollection, center image.Point) segmentIn
   p := qbezier.points
   segment.start = p[0]
   segment.end = p[2]
-  segment.d = fmt.Sprintf("C %d %d, %d %d, %d %d", p[1].X - center.X, p[1].Y - center.Y,
+  segment.d = fmt.Sprintf(" C %d %d, %d %d, %d %d", p[1].X - center.X, p[1].Y - center.Y,
     p[2].X - center.X, p[2].Y - center.Y)
   return segment
 }
@@ -114,7 +114,7 @@ func createLineSegment(line pointCollection, center image.Point) segmentInfo {
   segment.end = p[len(p)-1]
   d := ""
   for j := 1; j < len(p); j++ {
-    d = fmt.Sprintf("%s L %d,%d", d, p[j].X - center.X, p[j].Y, - center.Y)
+    d = fmt.Sprintf("%s L %d,%d", d, p[j].X - center.X, p[j].Y - center.Y)
   }
   segment.d = d
   return segment
