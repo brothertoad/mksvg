@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "image"
+  "github.com/brothertoad/btu"
   "github.com/brothertoad/bezier"
 )
 
@@ -25,9 +26,51 @@ func createD(obj Object) string {
   for _, line := range(obj.rawLines) {
     segments = append(segments, createLineSegment(line, obj.center))
   }
-  // Sort the segments so that the starting point of each segment is the
-  // ending point of the previous segment.
-  return ""
+  if len(segments) > 0 {
+    // Sort the segments so that the starting point of each segment is the
+    // ending point of the previous segment.
+    segments = sortSegments(segments)
+  }
+  // We will return a move to the start of the first segment, followed by
+  // the d of each segment.
+  d := fmt.Sprintf("M %d,%d", segments[0].start.X, segments[0].start.Y)
+  for _, segment := range(segments) {
+    d = fmt.Sprintf("%s%s", d, segment.d)
+  }
+  return d
+}
+
+func sortSegments(unsorted []segmentInfo) []segmentInfo {
+  sorted := make([]segmentInfo, 0, len(unsorted))
+  // We will start, arbitrarily, with the first unsorted segment.
+  sorted = append(sorted, unsorted[0])
+  // Create a pseudo-set of the remaining unsorted segments.
+  // (See https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
+  // for the paradigm.)
+  remaining := make(map[int]bool, len(unsorted) - 1)
+  for j := 1; j < len(unsorted); j++ {
+    remaining[j] = true
+  }
+  nextStart := sorted[0].end
+  for len(remaining) > 0 {
+    // Find the entry in remaining with a start point that matches the previous end point.
+    found := -1
+    for k, _ := range(remaining) {
+      if unsorted[k].start == nextStart {
+        sorted = append(sorted, unsorted[k])
+        nextStart = unsorted[k].end
+        found = k
+        break
+      }
+    }
+    // If found is still less than zero, we didn't find one - this is a fatal error.
+    if found < 0 {
+      btu.Fatal("Can't find matching segment in object.")
+    }
+    // Remove the one we found.
+    delete(remaining, found)
+  }
+  return sorted
 }
 
 func createCurveSegment(curve pointCollection, center image.Point) segmentInfo {
