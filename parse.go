@@ -89,7 +89,7 @@ func parseObjects() {
       obj.rawRects[j] = image.Rectangle{r.points[0], r.points[1]}
     }
     obj.center = getObjectCenter(obj)
-    obj.d = createD(obj)
+    obj.d = createD(name, obj)
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
     mask.Objects[name] = obj

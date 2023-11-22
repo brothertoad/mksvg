@@ -12,7 +12,7 @@ type segmentInfo struct {
   d string
 }
 
-func createD(obj Object) string {
+func createD(name string, obj Object) string {
   segments := make([]segmentInfo, 0)
   for _, curve := range(obj.rawCurves) {
     segments = append(segments, createCurveSegment(curve, obj.center))
@@ -29,7 +29,7 @@ func createD(obj Object) string {
   if len(segments) > 0 {
     // Sort the segments so that the starting point of each segment is the
     // ending point of the previous segment.
-    segments = sortSegments(segments)
+    segments = sortSegments(name, segments)
   }
   // We will return a move to the start of the first segment, followed by
   // the d of each segment.
@@ -40,7 +40,7 @@ func createD(obj Object) string {
   return d
 }
 
-func sortSegments(unsorted []segmentInfo) []segmentInfo {
+func sortSegments(name string, unsorted []segmentInfo) []segmentInfo {
   sorted := make([]segmentInfo, 0, len(unsorted))
   // We will start, arbitrarily, with the first unsorted segment.
   sorted = append(sorted, unsorted[0])
@@ -65,7 +65,7 @@ func sortSegments(unsorted []segmentInfo) []segmentInfo {
     }
     // If found is still less than zero, we didn't find one - this is a fatal error.
     if found < 0 {
-      btu.Fatal("Can't find matching segment in object.")
+      btu.Fatal("Can't find matching segment in object %s.", name)
     }
     // Remove the one we found.
     delete(remaining, found)
