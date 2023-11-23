@@ -6,7 +6,6 @@ import (
   "log"
   "math"
   "os"
-  "github.com/brothertoad/bezier"
   "github.com/brothertoad/btu"
 )
 
@@ -67,58 +66,6 @@ func scalePhysicalDimension(dimension string, scale float64) string {
 
 func writePathToSvg(d string, xform string) {
   writeSvgF(`<path vector-effect="non-scaling-stroke" d="%s" %s/>`, d, xform)
-  writeSvg("")  // to get a newline
-}
-
-func writeCurveToSvg(curve pointCollection, center image.Point, render RenderObject, xform string) {
-  beziers := bezier.GetControlPointsI(curve.points)
-  for _, bezier := range(beziers) {
-    writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, bezier.P0.X - center.X, bezier.P0.Y - center.Y)
-    writeSvgF(` C %d %d,`, bezier.P1.X - center.X, bezier.P1.Y- center.Y)
-    writeSvgF(` %d %d,`, bezier.P2.X - center.X, bezier.P2.Y - center.Y)
-    writeSvgF(` %d %d"`, bezier.P3.X - center.X, bezier.P3.Y - center.Y)
-    writeSvgF(` %s/>`, xform)
-    writeSvg("")  // to get a newline
-  }
-  writePointsToSvg(curve.points, center, xform)
-}
-
-func writeBezierToSvg(bezier pointCollection, center image.Point, render RenderObject, xform string) {
-  writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, bezier.points[0].X - center.X, bezier.points[0].Y - center.Y)
-  writeSvgF(` C %d %d,`, bezier.points[1].X - center.X, bezier.points[1].Y - center.Y)
-  writeSvgF(` %d %d,`, bezier.points[2].X - center.X, bezier.points[2].Y - center.Y)
-  writeSvgF(` %d %d"`, bezier.points[3].X - center.X, bezier.points[3].Y - center.Y)
-  writeSvgF(` %s/>`, xform)
-  writeSvg("")  // to get a newline
-  writePointsToSvg(bezier.points, center, xform)
-}
-
-func writeQBezierToSvg(qbezier pointCollection, center image.Point, render RenderObject, xform string) {
-  writeSvgF(`<path vector-effect="non-scaling-stroke" d="M %d %d `, qbezier.points[0].X - center.X, qbezier.points[0].Y - center.Y)
-  writeSvgF(` Q %d %d,`, qbezier.points[1].X - center.X, qbezier.points[1].Y - center.Y)
-  writeSvgF(` %d %d"`, qbezier.points[2].X - center.X, qbezier.points[2].Y - center.Y)
-  writeSvgF(` %s/>`, xform)
-  writeSvg("")  // to get a newline
-  writePointsToSvg(qbezier.points, center, xform)
-}
-
-func writeLineToSvg(line pointCollection, center image.Point, render RenderObject, xform string) {
-  writeSvgF(`<polyline vector-effect="non-scaling-stroke" points="`)
-  for j, p := range(line.points) {
-    if j != 0 {
-      writeSvgF(" ")
-    }
-    writeSvgF("%d,%d", p.X - center.X, p.Y - center.Y)
-  }
-  writeSvgF(`" %s/>`, xform)
-  writeSvg("")
-  writePointsToSvg(line.points, center, xform)
-}
-
-func writeRectangleToSvg(rect image.Rectangle, center image.Point, render RenderObject, xform string) {
-  writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d"`, rect.Min.X - center.X, rect.Min.Y - center.Y)
-  writeSvgF(`width="%d" height="%d" `, rect.Max.X - rect.Min.X - center.X, rect.Max.Y - rect.Min.Y - center.Y)
-  writeSvgF(`%s/>`, xform)
   writeSvg("")  // to get a newline
 }
 
