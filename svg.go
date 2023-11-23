@@ -102,6 +102,16 @@ func createTransformString(render RenderObject, object Object) string {
   return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, createScaleString(render, object))
 }
 
+func createTransformWithoutScaleString(render RenderObject, object Object) string {
+  scale := ""
+  if render.Flip == "hflip" {
+    scale = " scale(-1.0,1.0)"
+  } else if render.Flip == "vflip" {
+    scale = " scale(1.0,-1.0)"
+  }
+  return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, scale)
+}
+
 func createScaleString(render RenderObject, object Object) string {
   if render.Scale == 0.0 && object.Scale == 0.0 && render.Flip == "" {
     return ""
