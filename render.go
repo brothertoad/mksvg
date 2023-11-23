@@ -17,7 +17,18 @@ func render() {
     obj := mask.Objects[render.Object]
     xform := createTransformString(render, obj)
     writePathToSvg(obj.d, xform)
-    writePointsToSvg(obj.points, obj.center, xform)
+    // "unscale" radius
+    // This is a little complex, because if the render scale or oject scale is
+    // 0.0, treat it like it is 1.0.
+    scale := render.Scale
+    if scale == 0.0 {
+      scale = 1.0
+    }
+    if obj.Scale != 0.0 {
+      scale = scale * obj.Scale
+    }
+    radius := int(float64(config.PointRadius) / scale)
+    writePointsToSvg(obj.points, obj.center, radius, xform)
   }
   w := mask.Global.Width - 2 * config.MarginEdge
   h := mask.Global.Height - 2 * config.MarginEdge

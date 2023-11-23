@@ -75,7 +75,7 @@ func initialize(c *cli.Context) {
   }
   btu.DirMustExist(config.OutputDir)
   if config.PointRadius == 0 {
-    config.PointRadius = 2
+    config.PointRadius = 8
   }
   if config.MarginEdge == 0 {
     config.MarginEdge = 5

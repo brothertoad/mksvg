@@ -74,12 +74,12 @@ func writePlainRectangleToSvg(x, y, width, height int) {
   writeSvg("")
 }
 
-func writePointsToSvg(points []image.Point, center image.Point, xform string) {
+func writePointsToSvg(points []image.Point, center image.Point, radius int, xform string) {
   if !config.printPoints {
     return
   }
   for _, p := range(points) {
-    writeSvgF(`<circle vector-effect="non-scaling-stroke" class="dot" cx="%d" cy="%d" r="%d" %s/>`, p.X - center.X, p.Y - center.Y, config.PointRadius, xform)
+    writeSvgF(`<circle vector-effect="non-scaling-stroke" class="dot" cx="%d" cy="%d" r="%d" %s/>`, p.X - center.X, p.Y - center.Y, radius, xform)
     writeSvg("")
   }
 }
