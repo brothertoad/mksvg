@@ -55,13 +55,14 @@ type Object struct {
   Beziers []string
   QBeziers []string
   Lines []string
+  // Rects are no longer supported, but we will include them here and flag an
+  // error if any are specified so they aren't silently ignored.
   Rects []string
   Scale float64
   rawCurves []pointCollection
   rawBeziers []pointCollection
   rawQBeziers []pointCollection
   rawLines []pointCollection
-  rawRects []image.Rectangle
   center image.Point
   d string // valud of the d attribute of an SVG path element
 }

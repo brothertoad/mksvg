@@ -39,12 +39,6 @@ func parseMask(paths []string) {
   if mask.Points == nil {
     mask.Points = make(map[string]image.Point)
   }
-  // If a list of items is nil, make it an empty slice to ease error checking.
-  for _, obj := range(mask.Objects) {
-    if obj.Rects == nil {
-      obj.Rects = make([]string, 0)
-    }
-  }
   parseObjects()
   // dumpObjects()
 }
@@ -73,21 +67,15 @@ func printPointSlices(label string, collections []pointCollection) {
 // Parse the objects in the mask to actual numeric values.
 func parseObjects() {
   for name, obj := range(mask.Objects) {
+    // If this object has rectangles, stop here - the close path logic does not
+    // support rectangles.
+    if obj.Rects != nil && len(obj.Rects) > 0 {
+      btu.Fatal("%s has rectangles, which are no longer supported.\n", name)
+    }
     obj.rawCurves = parsePointLists(obj.Curves)
     obj.rawBeziers = parsePointLists(obj.Beziers)
     obj.rawQBeziers = parsePointLists(obj.QBeziers)
     obj.rawLines = parsePointLists(obj.Lines)
-    //  Each rectangle consists of two points, so we will parse
-    // the rectangles as if they were points.  Then we check that each
-    // rectangle consists of exactly two points.
-    rectsAsPoints := parsePointLists(obj.Rects)
-    obj.rawRects = make([]image.Rectangle, len(rectsAsPoints))
-    for j, r := range(rectsAsPoints) {
-      if len(r.points) != 2 {
-        btu.Fatal("Found a rectangle with more than two points\n")
-      }
-      obj.rawRects[j] = image.Rectangle{r.points[0], r.points[1]}
-    }
     obj.center = getObjectCenter(obj)
     obj.d = createD(name, obj)
     // OK, work around the fact that obj is a *copy* of the entry in
