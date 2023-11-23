@@ -102,7 +102,7 @@ func createTransformString(render RenderObject, object Object) string {
   return fmt.Sprintf(`transform="translate(%d,%d)%s"`, render.Translate.X, render.Translate.Y, createScaleString(render, object))
 }
 
-func createTransformWithoutScaleString(render RenderObject, object Object) string {
+func createUnscaledTransformString(render RenderObject, object Object) string {
   scale := ""
   if render.Flip == "hflip" {
     scale = " scale(-1.0,1.0)"
