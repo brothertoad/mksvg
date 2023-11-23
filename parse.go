@@ -78,6 +78,7 @@ func parseObjects() {
     obj.rawLines = parsePointLists(obj.Lines)
     obj.center = getObjectCenter(obj)
     obj.d = createD(name, obj)
+    obj.points = createPointSet(name, obj)
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
     mask.Objects[name] = obj

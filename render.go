@@ -17,6 +17,9 @@ func render() {
     obj := mask.Objects[render.Object]
     xform := createTransformString(render, obj)
     writePathToSvg(obj.d, xform)
+    // Need to add logic to print points if specified.
+    unscaledXform := createUnscaledTransformString(render)
+    writePointsToSvg(obj.points, obj.center, unscaledXform)
   }
   w := mask.Global.Width - 2 * config.MarginEdge
   h := mask.Global.Height - 2 * config.MarginEdge
