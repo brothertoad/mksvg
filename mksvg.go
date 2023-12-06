@@ -13,6 +13,7 @@ import (
 )
 
 var logLevel = ""
+var initializeToml = false
 
 func main() {
   app := &cli.App{
@@ -28,6 +29,7 @@ func main() {
       &cli.BoolFlag{Name: "grid", Usage: "print a grid", Aliases: []string{"g"}, Value: false, Destination: &config.printGrid},
       &cli.StringFlag{Name: "image", Usage: "set background image"},
       &cli.StringFlag{Name: "log-level", Usage: "set log level", Destination: &logLevel},
+      &cli.BoolFlag{Name: "initialize", Usage: "create a dummy mask.toml", Value: false, Destination: &initializeToml},
     },
     Action: mksvg,
   }
@@ -68,6 +70,9 @@ func initialize(c *cli.Context) {
   if logLevel != "" {
     btu.SetLogLevelByName(logLevel)
   }
+  if initializeToml {
+    createEmptyToml()
+  }
   path := c.String("config")
   if !btu.FileExists(path) {
     log.Fatalf("Config file '%s' does not exist.\n", path)
@@ -87,4 +92,15 @@ func initialize(c *cli.Context) {
     config.MarginEdge = 5
   }
   config.outputPath = filepath.Join(config.OutputDir, c.String("output"))
+}
+
+func createEmptyToml() {
+  const fileName = "mask.toml"
+  if btu.FileExists(fileName) {
+    btu.Fatal("%s already exists\n", fileName)
+  }
+  btu.Info("Creating %s...\n", fileName)
+  err := os.WriteFile(fileName, []byte(maskTomlTemplate), 0644)
+  btu.CheckError(err)
+  os.Exit(0)
 }

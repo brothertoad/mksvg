@@ -116,3 +116,36 @@ var cssTemplate = `#mainContainer {
     display: inline-block;
 }
 `
+
+var maskTomlTemplate = `[global]
+title = "title"
+# printName = "title"
+physicalWidth = "120mm"
+physicalHeight = "90mm"
+width = 1200
+height = 900
+scale = 1.0
+strokeWidth = 1
+
+[points]
+# p = { x = , y =  }
+
+[objects]
+obj.curves = [
+"rear1 192,476 245,454 307,431 362,414 421,399 rear2",
+"rear3 454,610 390,604 327,593 272,579 204,555 154,536 rear1",
+]
+obj.lines = [
+"rear2 rear3"
+]
+obj.beziers = [
+"1080,395 1058,351 1058,323 1080,279"
+]
+
+[[renders]]
+object = ""
+comment = ""
+translate = { x = , y =  }
+flip = ""
+hide = false
+`
