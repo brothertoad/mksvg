@@ -12,6 +12,8 @@ import (
   "github.com/brothertoad/btu"
 )
 
+var logLevel = ""
+
 func main() {
   app := &cli.App{
     Name: "mksvg",
@@ -25,6 +27,7 @@ func main() {
       &cli.BoolFlag{Name: "border", Usage: "print a border", Aliases: []string{"b"}, Value: false, Destination: &config.printBorder},
       &cli.BoolFlag{Name: "grid", Usage: "print a grid", Aliases: []string{"g"}, Value: false, Destination: &config.printGrid},
       &cli.StringFlag{Name: "image", Usage: "set background image"},
+      &cli.StringFlag{Name: "log-level", Usage: "set log level", Destination: &logLevel},
     },
     Action: mksvg,
   }
@@ -62,6 +65,9 @@ func getArgs(c *cli.Context) []string {
 
 func initialize(c *cli.Context) {
   btu.SetLogLevel(btu.INFO)
+  if logLevel != "" {
+    btu.SetLogLevelByName(logLevel)
+  }
   path := c.String("config")
   if !btu.FileExists(path) {
     log.Fatalf("Config file '%s' does not exist.\n", path)
