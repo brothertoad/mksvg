@@ -102,7 +102,7 @@ func createQBezierSegment(qbezier pointCollection, center image.Point) segmentIn
   p := qbezier.points
   segment.start = p[0]
   segment.end = p[2]
-  segment.d = fmt.Sprintf(" C %d %d, %d %d, %d %d", p[1].X - center.X, p[1].Y - center.Y,
+  segment.d = fmt.Sprintf(" Q %d %d, %d %d", p[1].X - center.X, p[1].Y - center.Y,
     p[2].X - center.X, p[2].Y - center.Y)
   return segment
 }
