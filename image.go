@@ -18,11 +18,11 @@ func initFromImage(imagePath string) {
   html := fmt.Sprintf(htmlTemplate, mask.Global.Title, w, h)
   path := filepath.Join(config.OutputDir, "mask.html")
   err := os.WriteFile(path, []byte(html), 0644)
-  btu.CheckError(err)
+  btu.CheckError2(err, "unable to write html file '%s'", path)
   css := fmt.Sprintf(cssTemplate, w, h)
   path = filepath.Join(config.OutputDir, "mask.css")
   err = os.WriteFile(path, []byte(css), 0644)
-  btu.CheckError(err)
+  btu.CheckError2(err, "Unable to write css file '%s'", path)
   path = filepath.Join(config.OutputDir, "mask.jpg")
   btu.CopyFile(imagePath, path)
 }

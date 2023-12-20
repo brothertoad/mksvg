@@ -78,9 +78,9 @@ func initialize(c *cli.Context) {
     log.Fatalf("Config file '%s' does not exist.\n", path)
   }
   b, err := ioutil.ReadFile(path)
-  btu.CheckError(err)
+  btu.CheckError2(err, "Unable to read config file '%s'", path)
   err = toml.Unmarshal(b, &config)
-  btu.CheckError(err)
+  btu.CheckError2(err, "Unable to unmarshal config file '%s'", path)
   if len(config.OutputDir) == 0 {
     config.OutputDir = "."
   }
@@ -101,6 +101,6 @@ func createEmptyToml() {
   }
   btu.Info("Creating %s...\n", fileName)
   err := os.WriteFile(fileName, []byte(maskTomlTemplate), 0644)
-  btu.CheckError(err)
+  btu.CheckError2(err, "Unable to write TOML file '%s'", fileName)
   os.Exit(0)
 }
