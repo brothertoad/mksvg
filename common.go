@@ -18,6 +18,7 @@ var config struct {
   StrokeWidth int
   outputPath string
   printPoints bool
+  printBoundingBox bool
   printBorder bool
   printGrid bool
 }

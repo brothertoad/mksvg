@@ -201,5 +201,5 @@ func getObjectCenter(obj Object) (image.Point, image.Rectangle) {
   var c image.Point
   c.X = (xmin + xmax) / 2
   c.Y = (ymin + ymax) / 2
-  return c, image.Rect(xmin, ymin, xmax, ymax)
+  return c, image.Rect(xmin - c.X, ymin - c.Y, xmax - c.X, ymax - c.Y)
 }

@@ -29,6 +29,9 @@ func render() {
     }
     radius := int(float64(config.PointRadius) / scale)
     writePointsToSvg(obj.points, obj.center, radius, xform)
+    if config.printBoundingBox {
+      writeRectangleToSvg(obj.bbox, xform)
+    }
   }
   w := mask.Global.Width - 2 * config.MarginEdge
   h := mask.Global.Height - 2 * config.MarginEdge

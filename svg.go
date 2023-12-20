@@ -69,6 +69,11 @@ func writePathToSvg(d string, xform string) {
   writeSvg("")  // to get a newline
 }
 
+func writeRectangleToSvg(r image.Rectangle, xform string) {
+  writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d" width="%d" height="%d" %s/>`, r.Min.X, r.Min.Y, r.Max.X - r.Min.X, r.Max.Y - r.Min.Y, xform)
+  writeSvg("")
+}
+
 func writePlainRectangleToSvg(x, y, width, height int) {
   writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d" width="%d" height="%d"/>`, x, y, width, height)
   writeSvg("")
