@@ -5,7 +5,6 @@ import (
   "image"
   _ "image/jpeg"
   _ "image/png"
-  "log"
   "os"
   "path/filepath"
   "github.com/brothertoad/btu"
@@ -31,8 +30,6 @@ func initFromImage(imagePath string) {
 func getImageDimensions(imagePath string) (int, int) {
     file := btu.OpenFile(imagePath)
     image, _, err := image.DecodeConfig(file)
-    if err != nil {
-        log.Fatalln(err)
-    }
+    btu.CheckError2(err, "Can't get dimensions from file '%s'", imagePath)
     return image.Width, image.Height
 }

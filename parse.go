@@ -120,7 +120,7 @@ func parseCoordinates(s string) image.Point {
   var point image.Point
   coords := strings.Split(s, ",")
   if len(coords) != 2 {
-    btu.Fatal("Expected two coordinates in point\n")
+    btu.Fatal("Expected two coordinates in point '%s'\n", s)
   }
   point.X = btu.Atoi2(coords[0], "Can't convert coordinate value '%s' to a number (full coordinates '%s')", coords[0], s)
   point.Y = btu.Atoi2(coords[1], "Can't convert coordinate value '%s' to a number (full coordinates '%s')", coords[1], s)

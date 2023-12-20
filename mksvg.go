@@ -3,7 +3,6 @@ package main
 import (
   "bufio"
   "io/ioutil"
-  "log"
   "os"
   "path/filepath"
   "time"
@@ -75,7 +74,7 @@ func initialize(c *cli.Context) {
   }
   path := c.String("config")
   if !btu.FileExists(path) {
-    log.Fatalf("Config file '%s' does not exist.\n", path)
+    btu.Fatal("Config file '%s' does not exist.\n", path)
   }
   b, err := ioutil.ReadFile(path)
   btu.CheckError2(err, "Unable to read config file '%s'", path)
