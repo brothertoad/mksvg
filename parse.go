@@ -76,7 +76,7 @@ func parseObjects() {
     obj.rawBeziers = parsePointLists(obj.Beziers)
     obj.rawQBeziers = parsePointLists(obj.QBeziers)
     obj.rawLines = parsePointLists(obj.Lines)
-    obj.center = getObjectCenter(obj)
+    obj.center, obj.bbox = getObjectCenter(obj)
     obj.d = createD(name, obj)
     obj.points = createPointSet(name, obj)
     // OK, work around the fact that obj is a *copy* of the entry in
@@ -129,7 +129,7 @@ func parseCoordinates(s string) image.Point {
 
 // This finds the center of the bounding rectangle of the object.
 // This should probably be a method.
-func getObjectCenter(obj Object) image.Point {
+func getObjectCenter(obj Object) (image.Point, image.Rectangle) {
   xmin := 2000000000
   xmax := -2000000000
   ymin := 2000000000
@@ -201,5 +201,5 @@ func getObjectCenter(obj Object) image.Point {
   var c image.Point
   c.X = (xmin + xmax) / 2
   c.Y = (ymin + ymax) / 2
-  return c
+  return c, image.Rect(xmin, ymin, xmax, ymax)
 }

@@ -63,6 +63,7 @@ type Object struct {
   rawQBeziers []pointCollection
   rawLines []pointCollection
   center image.Point
+  bbox image.Rectangle  // bounding box
   d string // value of the d attribute of the SVG path element for this object
   points []image.Point  // set of points to print if --points is specfied
 }
