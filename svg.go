@@ -35,8 +35,8 @@ func openSvg(path string) {
   w := mask.Global.Width
   h := mask.Global.Height
   if mask.Global.Scale != 0.0 {
-    pw = scalePhysicalDimension(pw, mask.Global.Scale)
-    ph = scalePhysicalDimension(ph, mask.Global.Scale)
+    pw = scalePhysicalDimension("physical width", pw, mask.Global.Scale)
+    ph = scalePhysicalDimension("physical height", ph, mask.Global.Scale)
     w = int(math.Round(float64(w) * mask.Global.Scale))
     h = int(math.Round(float64(h) * mask.Global.Scale))
   }
@@ -48,7 +48,7 @@ func openSvg(path string) {
 }
 
 // We assume the physical dimension is all ASCII (i.e., no Unicode).
-func scalePhysicalDimension(dimension string, scale float64) string {
+func scalePhysicalDimension(name, dimension string, scale float64) string {
   // Get the numeric part of the dimension.
   var n int // index of units
   for j, c := range(dimension) {
@@ -58,7 +58,7 @@ func scalePhysicalDimension(dimension string, scale float64) string {
      n = j
      break
   }
-  i := btu.Atoi(dimension[0:n])
+  i := btu.Atoi2(dimension[0:n], "Can't convert '%s' (numeric value '%s', full value '%s') to a number", name, dimension[0:n], dimension)
   units := dimension[n:]
   i = int(math.Round(float64(i) * scale))
   return fmt.Sprintf("%d%s", i, units)
