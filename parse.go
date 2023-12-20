@@ -17,7 +17,7 @@ func parseMask(paths []string) {
     b, err := ioutil.ReadFile(path)
     btu.CheckError(err)
     err = toml.Unmarshal(b, &mask)
-    btu.CheckError(err)
+    btu.CheckError2(err, "Unable to unmarshal TOML file '%s'\n", path)
   }
 
   // Get values from config, if necessary.

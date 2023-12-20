@@ -139,5 +139,5 @@ func closeSvg() {
   }
   svgFile.WriteString(svgSuffix)
   err := svgFile.Close()
-  btu.CheckError(err)
+  btu.CheckError2(err, "Unable to close SVG file.\n")
 }
