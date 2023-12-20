@@ -23,7 +23,6 @@ var config struct {
 }
 
 type GlobalInfo struct {
-  Image string
   StrokeColor string
   StrokeWidth int
   Title string
