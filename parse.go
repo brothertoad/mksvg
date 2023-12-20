@@ -166,6 +166,22 @@ func getObjectCenter(obj Object) image.Point {
       }
     }
   }
+  for _, qbezier := range(obj.rawQBeziers) {
+    for _, p := range(qbezier.points) {
+      if p.X < xmin {
+        xmin = p.X
+      }
+      if p.Y < ymin {
+        ymin = p.Y
+      }
+      if p.X > xmax {
+        xmax = p.X
+      }
+      if p.Y > ymax {
+        ymax = p.Y
+      }
+    }
+  }
   for _, line := range(obj.rawLines) {
     for _, p := range(line.points) {
       if p.X < xmin {
