@@ -15,7 +15,7 @@ var htmlTemplate = `<!DOCTYPE html>
     <div id="mainContainer">
         <div id="maskContainer">
             <div id="maskDiv">
-                <img src="mask.svg" width="%dpx" height="%dpx">
+                <!-- <img src="mask.svg" width="%dpx" height="%dpx"> -->
             </div>
         </div>
         <div id="textContainer">

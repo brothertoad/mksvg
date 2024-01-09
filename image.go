@@ -14,7 +14,7 @@ func initFromImage(imagePath string) {
   w, h := getImageDimensions(imagePath)
   // Create new mask.html and mask.css files, and copy the image
   // file to the output directory.
-  html := fmt.Sprintf(htmlTemplate, mask.Global.Title, w, h)
+  html := fmt.Sprintf(htmlTemplate, mask.Global.Title)
   path := filepath.Join(config.OutputDir, "mask.html")
   err := os.WriteFile(path, []byte(html), 0644)
   btu.CheckError2(err, "unable to write html file '%s'", path)
