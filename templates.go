@@ -131,23 +131,19 @@ strokeWidth = 1
 
 [objects]
 obj.curves = [
-""
 ]
 obj.beziers = [
-""
 ]
 obj.qbeziers = [
-""
 ]
 obj.lines = [
-""
 ]
 # obj.scale = 1.0
 
 [[renders]]
 object = ""
 # comment = ""
-translate = { x = , y =  }
+# translate = { x = , y =  }
 # flip = ""
 # scale = 1.0
 # hide = false

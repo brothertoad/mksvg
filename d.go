@@ -26,11 +26,12 @@ func createD(name string, obj Object) string {
   for _, line := range(obj.rawLines) {
     segments = append(segments, createLineSegment(line, obj.center))
   }
-  if len(segments) > 0 {
-    // Sort the segments so that the starting point of each segment is the
-    // ending point of the previous segment.
-    segments = sortSegments(name, segments)
+  if len(segments) == 0 {
+    return ""
   }
+  // Sort the segments so that the starting point of each segment is the
+  // ending point of the previous segment.
+  segments = sortSegments(name, segments)
   // We will return a move to the start of the first segment, followed by
   // the d of each segment.
   d := fmt.Sprintf("M %d,%d", segments[0].start.X - obj.center.X, segments[0].start.Y - obj.center.Y)

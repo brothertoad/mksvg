@@ -42,6 +42,7 @@ func mksvg(c *cli.Context) error {
   parseMask(args)
   if c.String("image") != "" {
     initFromImage(c.String("image"))
+    return nil
   }
   render()
   return nil

@@ -89,7 +89,7 @@ func parseObjects() {
 // (either by coordinates or by name).
 func parsePointLists(lists []string) []pointCollection {
   collections := make([]pointCollection, 0)
-  if lists == nil {
+  if lists == nil || len(lists) == 0 {
     return collections
   }
   for _, list := range(lists) {
