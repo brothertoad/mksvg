@@ -15,7 +15,7 @@ var htmlTemplate = `<!DOCTYPE html>
     <div id="mainContainer">
         <div id="maskContainer">
             <div id="maskDiv">
-                <!-- <img src="mask.svg" width="%dpx" height="%dpx"> -->
+                <img src="mask.jpg">
             </div>
         </div>
         <div id="textContainer">
@@ -66,7 +66,6 @@ var htmlTemplate = `<!DOCTYPE html>
 `
 
 var cssTemplate = `#mainContainer {
-    /* display: flex; */
     flex-direction: column;
     width: 100%%;
     height: 100%%;
@@ -81,7 +80,6 @@ var cssTemplate = `#mainContainer {
 #maskDiv {
     width: %dpx;
     height: %dpx;
-    background: url("mask.jpg") no-repeat center;
     margin: auto;
 }
 
