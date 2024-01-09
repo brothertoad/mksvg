@@ -15,7 +15,7 @@ var htmlTemplate = `<!DOCTYPE html>
     <div id="mainContainer">
         <div id="maskContainer">
             <div id="maskDiv">
-                <img src="mask.jpg">
+                <img id="maskImg" src="mask.jpg">
             </div>
         </div>
         <div id="textContainer">
@@ -78,8 +78,11 @@ var cssTemplate = `#mainContainer {
 }
 
 #maskDiv {
-    width: %dpx;
-    height: %dpx;
+    margin: auto;
+}
+
+#maskImg {
+  display: block;
     margin: auto;
 }
 
