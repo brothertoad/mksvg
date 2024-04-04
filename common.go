@@ -21,6 +21,7 @@ var config struct {
   printBoundingBox bool
   printBorder bool
   printGrid bool
+  scale float64
 }
 
 type GlobalInfo struct {
@@ -45,6 +46,7 @@ type RenderObject struct {
   Hide      bool
   Translate image.Point
   Scale     float64
+  Aspect    float64
   Flip      string
 }
 

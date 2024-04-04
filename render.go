@@ -10,6 +10,9 @@ func render() {
     if render.Hide {
       continue
     }
+    if render.Aspect == 0.0 {
+      render.Aspect = 1.0  // default value
+    }
     if render.Comment != "" {
       writeSvgF(`<!-- %s -->`, render.Comment)
       writeSvg("")

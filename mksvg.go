@@ -30,6 +30,7 @@ func main() {
       &cli.StringFlag{Name: "image", Usage: "set background image"},
       &cli.StringFlag{Name: "log-level", Usage: "set log level", Destination: &logLevel},
       &cli.BoolFlag{Name: "initialize", Usage: "create a dummy mask.toml", Value: false, Destination: &initializeToml},
+      &cli.Float64Flag{Name: "scale", Usage: "set overall scale", Value: 1.0, Destination: &config.scale},
     },
     Action: mksvg,
   }
