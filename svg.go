@@ -34,17 +34,30 @@ func openSvg(path string) {
   ph := mask.Global.PhysicalHeight
   w := mask.Global.Width
   h := mask.Global.Height
-  if mask.Global.Scale != 0.0 {
-    pw = scalePhysicalDimension("physical width", pw, mask.Global.Scale)
-    ph = scalePhysicalDimension("physical height", ph, mask.Global.Scale)
-    w = int(math.Round(float64(w) * mask.Global.Scale))
-    h = int(math.Round(float64(h) * mask.Global.Scale))
-  }
+  scale := finalScale()
+  pw = scalePhysicalDimension("physical width", pw, scale)
+  ph = scalePhysicalDimension("physical height", ph, scale)
+  w = int(math.Round(float64(w) * scale))
+  h = int(math.Round(float64(h) * scale))
   writeSvgF(svgPrefix, pw, ph, w, h, mask.Global.StrokeColor, mask.Global.StrokeWidth, mask.Global.StrokeColor)
-  if mask.Global.Scale != 0.0 {
-    writeSvgF(`<g transform="scale(%.3f)">`, mask.Global.Scale)
-    writeSvg("")
+  writeSvgF(`<g transform="scale(%.3f)">`, scale)
+  writeSvg("")
+}
+
+// The final scale is the product of the scale in the global section of the mask file and the
+// scale passed as a command line flag.
+func finalScale() float64 {
+  if mask.Global.Scale == 0.0 && config.scale == 0.0 {
+    return 1.0
   }
+  scale := mask.Global.Scale
+  if scale == 0.0 {
+    scale = 1.0
+  }
+  if config.scale != 0.0 {
+    scale = scale * config.scale
+  }
+  return scale
 }
 
 // We assume the physical dimension is all ASCII (i.e., no Unicode).
@@ -139,9 +152,7 @@ func writeSvgF(msg string, a ...any) {
 }
 
 func closeSvg() {
-  if mask.Global.Scale != 0.0 {
-    writeSvg("</g>")
-  }
+  writeSvg("</g>")
   svgFile.WriteString(svgSuffix)
   err := svgFile.Close()
   btu.CheckError2(err, "Unable to close SVG file.")
