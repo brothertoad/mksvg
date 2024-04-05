@@ -121,7 +121,7 @@ func createTransformString(render RenderObject, object Object) string {
 }
 
 func createScaleString(render RenderObject, object Object) string {
-  if render.Scale == 0.0 && object.Scale == 0.0 && render.Flip == "" {
+  if render.Scale == 0.0 && render.Aspect == 1.0 && object.Scale == 0.0 && render.Flip == "" {
     return ""
   }
   scale := render.Scale
@@ -131,13 +131,15 @@ func createScaleString(render RenderObject, object Object) string {
   if object.Scale != 0.0 {
     scale *= object.Scale
   }
+  hscale := scale * render.Aspect
+  vscale := scale
   switch render.Flip {
   case "":
-    return fmt.Sprintf(" scale(%.3f)", scale)
+    return fmt.Sprintf(" scale(%.3f,%.3f)", hscale, vscale)
   case "hflip":
-    return fmt.Sprintf(" scale(%.3f,%.3f)", - scale, scale)
+    return fmt.Sprintf(" scale(%.3f,%.3f)", - hscale, vscale)
   case "vflip":
-    return fmt.Sprintf(" scale(%.3f,%.3f)", scale, - scale)
+    return fmt.Sprintf(" scale(%.3f,%.3f)", hscale, - vscale)
   }
   log.Fatalf("Invalid flip value: %s\n", render.Flip)
   return ""
