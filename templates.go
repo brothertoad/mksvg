@@ -150,4 +150,5 @@ object = ""
 # flip = ""
 # scale = 1.0
 # hide = false
+# aspect = 1.0 # width to height ratio
 `
