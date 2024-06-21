@@ -6,8 +6,6 @@ import (
   _ "image/jpeg"
   "io/ioutil"
   "strings"
-  "unicode"
-  "unicode/utf8"
   "github.com/pelletier/go-toml"
   "github.com/brothertoad/btu"
 )
@@ -102,10 +100,9 @@ func parsePointLists(lists []string) []pointCollection {
     pc.points = make([]image.Point, len(words))
     for j, word := range(words) {
       // Each word is either a pair of coordinates (separated by a comma, with no
-      // extra whitespace) or a point name.  Look at the first rune to determine
-      // which of the two it is.
-      rune, _ := utf8.DecodeRuneInString(word)
-      if unicode.IsDigit(rune) {
+      // extra whitespace) or a point name.  If it contains a comma, it is a pair
+      // of coordinates.
+      if strings.Contains(word, ",") {
         pc.points[j] = parseCoordinates(word)
       } else {
         pc.points[j] = mask.Points[word]
