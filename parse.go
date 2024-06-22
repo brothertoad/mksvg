@@ -75,6 +75,8 @@ func parseObjects() {
     obj.rawQBeziers = parsePointLists(obj.QBeziers)
     obj.rawLines = parsePointLists(obj.Lines)
     obj.center, obj.bbox = getObjectCenter(obj)
+    verifyPointSliceLengths("bezier", 4, obj.rawBeziers)
+    verifyPointSliceLengths("qbezier", 4, obj.rawQBeziers)
     obj.d = createD(name, obj)
     obj.points = createPointSet(name, obj)
     // OK, work around the fact that obj is a *copy* of the entry in
@@ -126,6 +128,16 @@ func parseCoordinates(s string) image.Point {
   point.X = btu.Atoi2(coords[0], "Can't convert coordinate value '%s' to a number (full coordinates '%s')", coords[0], s)
   point.Y = btu.Atoi2(coords[1], "Can't convert coordinate value '%s' to a number (full coordinates '%s')", coords[1], s)
   return point
+}
+
+// Verifies that each entry in the slice has the specified length.
+// An invalid length is a fatal error.
+func verifyPointSliceLengths(groupName string, length int, pcs []pointCollection) {
+  for _, pc := range pcs {
+    if len(pc.points) != length {
+      btu.Fatal("Found a %s with an invalid number of points (%d)\n", groupName, len(pc.points))
+    }
+  }
 }
 
 // This finds the center of the bounding rectangle of the object.
