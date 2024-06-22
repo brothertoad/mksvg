@@ -105,7 +105,11 @@ func parsePointLists(lists []string) []pointCollection {
       if strings.Contains(word, ",") {
         pc.points[j] = parseCoordinates(word)
       } else {
-        pc.points[j] = mask.Points[word]
+        if p, exists := mask.Points[word]; exists {
+          pc.points[j] = p
+        } else {
+          btu.Fatal("No point named %s\n", word)
+        }
       }
     }
     collections = append(collections, pc)
