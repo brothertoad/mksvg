@@ -76,7 +76,7 @@ func parseObjects() {
     obj.rawLines = parsePointLists(obj.Lines)
     obj.center, obj.bbox = getObjectCenter(obj)
     verifyPointSliceLengths("bezier", 4, obj.rawBeziers)
-    verifyPointSliceLengths("qbezier", 4, obj.rawQBeziers)
+    verifyPointSliceLengths("qbezier", 3, obj.rawQBeziers)
     obj.d = createD(name, obj)
     obj.points = createPointSet(name, obj)
     // OK, work around the fact that obj is a *copy* of the entry in
