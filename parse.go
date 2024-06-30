@@ -74,6 +74,7 @@ func parseObjects() {
     obj.rawBeziers = parsePointLists(obj.Beziers)
     obj.rawQBeziers = parsePointLists(obj.QBeziers)
     obj.rawLines = parsePointLists(obj.Lines)
+    obj.rawSegments = parsePointLists(obj.Segments)
     obj.center, obj.bbox = getObjectCenter(obj)
     verifyPointSliceLengths("bezier", 4, obj.rawBeziers)
     verifyPointSliceLengths("qbezier", 3, obj.rawQBeziers)

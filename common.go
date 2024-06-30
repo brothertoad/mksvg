@@ -38,7 +38,7 @@ type GlobalInfo struct {
 
 type pointCollection struct {
     points []image.Point
-  }
+}
 
 type RenderObject struct {
   Object    string
@@ -57,6 +57,7 @@ type Object struct {
   Beziers []string
   QBeziers []string
   Lines []string
+  Segments []string
   // Rects are no longer supported, but we will include them here and flag an
   // error if any are specified so they aren't silently ignored.
   Rects []string
@@ -65,6 +66,7 @@ type Object struct {
   rawBeziers []pointCollection
   rawQBeziers []pointCollection
   rawLines []pointCollection
+  rawSegments []pointCollection
   center image.Point
   bbox image.Rectangle  // bounding box
   d string // value of the d attribute of the SVG path element for this object
