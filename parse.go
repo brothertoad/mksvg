@@ -212,8 +212,29 @@ func getObjectCenter(obj Object) (image.Point, image.Rectangle) {
       }
     }
   }
+  xmin, ymin, xmax, ymax = updateLimits(obj.rawSegments, xmin, ymin, xmax, ymax)
   var c image.Point
   c.X = (xmin + xmax) / 2
   c.Y = (ymin + ymax) / 2
   return c, image.Rect(xmin - c.X, ymin - c.Y, xmax - c.X, ymax - c.Y)
+}
+
+func updateLimits(pcs []pointCollection, xmin int, ymin int, xmax int, ymax int) (int, int, int, int) {
+  for _, pc := range pcs {
+    for _, p := range pc.points {
+      if p.X < xmin {
+        xmin = p.X
+      }
+      if p.Y < ymin {
+        ymin = p.Y
+      }
+      if p.X > xmax {
+        xmax = p.X
+      }
+      if p.Y > ymax {
+        ymax = p.Y
+      }
+    }
+  }
+  return xmin, ymin, xmax, ymax
 }
