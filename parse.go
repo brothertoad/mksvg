@@ -148,70 +148,10 @@ func getObjectCenter(obj Object) (image.Point, image.Rectangle) {
   xmax := -2000000000
   ymin := 2000000000
   ymax := -2000000000
-  for _, curve := range(obj.rawCurves) {
-    for _, p := range(curve.points) {
-      if p.X < xmin {
-        xmin = p.X
-      }
-      if p.Y < ymin {
-        ymin = p.Y
-      }
-      if p.X > xmax {
-        xmax = p.X
-      }
-      if p.Y > ymax {
-        ymax = p.Y
-      }
-    }
-  }
-  for _, bezier := range(obj.rawBeziers) {
-    for _, p := range(bezier.points) {
-      if p.X < xmin {
-        xmin = p.X
-      }
-      if p.Y < ymin {
-        ymin = p.Y
-      }
-      if p.X > xmax {
-        xmax = p.X
-      }
-      if p.Y > ymax {
-        ymax = p.Y
-      }
-    }
-  }
-  for _, qbezier := range(obj.rawQBeziers) {
-    for _, p := range(qbezier.points) {
-      if p.X < xmin {
-        xmin = p.X
-      }
-      if p.Y < ymin {
-        ymin = p.Y
-      }
-      if p.X > xmax {
-        xmax = p.X
-      }
-      if p.Y > ymax {
-        ymax = p.Y
-      }
-    }
-  }
-  for _, line := range(obj.rawLines) {
-    for _, p := range(line.points) {
-      if p.X < xmin {
-        xmin = p.X
-      }
-      if p.Y < ymin {
-        ymin = p.Y
-      }
-      if p.X > xmax {
-        xmax = p.X
-      }
-      if p.Y > ymax {
-        ymax = p.Y
-      }
-    }
-  }
+  xmin, ymin, xmax, ymax = updateLimits(obj.rawCurves, xmin, ymin, xmax, ymax)
+  xmin, ymin, xmax, ymax = updateLimits(obj.rawBeziers, xmin, ymin, xmax, ymax)
+  xmin, ymin, xmax, ymax = updateLimits(obj.rawQBeziers, xmin, ymin, xmax, ymax)
+  xmin, ymin, xmax, ymax = updateLimits(obj.rawLines, xmin, ymin, xmax, ymax)
   xmin, ymin, xmax, ymax = updateLimits(obj.rawSegments, xmin, ymin, xmax, ymax)
   var c image.Point
   c.X = (xmin + xmax) / 2
