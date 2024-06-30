@@ -82,6 +82,18 @@ func writePathToSvg(d string, xform string) {
   writeSvg("")  // to get a newline
 }
 
+func writePolylineToSvg(pc pointCollection, center image.Point, xform string) {
+  pointString := ""
+  for j, p := range pc.points {
+    if j != 0 {
+      pointString += " "
+    }
+    pointString += fmt.Sprintf("%d,%d", p.X - center.X, p.Y - center.Y)
+  }
+  writeSvgF(`<polyline vector-effect="non-scaling-stroke" points="%s" %s/>`, pointString, xform)
+  writeSvg("")  // to get a newline
+}
+
 func writeRectangleToSvg(r image.Rectangle, xform string) {
   writeSvgF(`<rect vector-effect="non-scaling-stroke" x="%d" y="%d" width="%d" height="%d" %s/>`, r.Min.X, r.Min.Y, r.Max.X - r.Min.X, r.Max.Y - r.Min.Y, xform)
   writeSvg("")

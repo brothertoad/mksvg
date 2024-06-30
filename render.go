@@ -20,6 +20,9 @@ func render() {
     obj := mask.Objects[render.Object]
     xform := createTransformString(render, obj)
     writePathToSvg(obj.d, xform)
+    for _, seg := range obj.rawSegments {
+      writePolylineToSvg(seg, obj.center, xform)
+    }
     // "unscale" radius
     // This is a little complex, because if the render scale or oject scale is
     // 0.0, treat it like it is 1.0.
