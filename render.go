@@ -2,6 +2,7 @@ package main
 
 import (
   "path"
+  "github.com/brothertoad/btu"
 )
 
 func render() {
@@ -17,7 +18,10 @@ func render() {
       writeSvgF(`<!-- %s -->`, render.Comment)
       writeSvg("")
     }
-    obj := mask.Objects[render.Object]
+    obj, found := mask.Objects[render.Object]
+    if !found {
+      btu.Fatal("Render references non-existent object '%s'\n", render.Object)
+    }
     xform := createTransformString(render, obj)
     writePathToSvg(obj.d, xform)
     for _, seg := range obj.rawSegments {
