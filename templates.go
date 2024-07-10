@@ -133,14 +133,7 @@ strokeWidth = 1
 # p = { x = , y =  }
 
 [objects]
-obj.curves = [
-]
-obj.beziers = [
-]
-obj.qbeziers = [
-]
-obj.lines = [
-]
+# objects can have curves, beziers, qbeziers, lines and segments
 # obj.scale = 1.0
 
 [[renders]]
