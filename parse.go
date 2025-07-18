@@ -5,6 +5,7 @@ import (
   "image"
   _ "image/jpeg"
   "io/ioutil"
+  "os"
   "strings"
   "github.com/pelletier/go-toml"
   "github.com/brothertoad/btu"
@@ -70,22 +71,47 @@ func parseObjects() {
     if obj.Rects != nil && len(obj.Rects) > 0 {
       btu.Fatal("%s has rectangles, which are no longer supported.\n", name)
     }
-    fmt.Printf("%s path is '%s'\n", name, obj.Path)
-    fmt.Printf("%s paths has %d entries\n", name, len(obj.Paths))
-    obj.rawCurves = parsePointLists(obj.Curves)
-    obj.rawBeziers = parsePointLists(obj.Beziers)
-    obj.rawQBeziers = parsePointLists(obj.QBeziers)
-    obj.rawLines = parsePointLists(obj.Lines)
-    obj.rawSegments = parsePointLists(obj.Segments)
-    obj.center, obj.bbox = getObjectCenter(obj)
-    verifyPointSliceLengths("bezier", 4, obj.rawBeziers)
-    verifyPointSliceLengths("qbezier", 3, obj.rawQBeziers)
-    obj.d = createD(name, obj)
-    obj.points = createPointSet(name, obj)
+    if !parsePaths(name, &obj) {
+      obj.rawCurves = parsePointLists(obj.Curves)
+      obj.rawBeziers = parsePointLists(obj.Beziers)
+      obj.rawQBeziers = parsePointLists(obj.QBeziers)
+      obj.rawLines = parsePointLists(obj.Lines)
+      obj.rawSegments = parsePointLists(obj.Segments)
+      obj.center, obj.bbox = getObjectCenter(obj)
+      verifyPointSliceLengths("bezier", 4, obj.rawBeziers)
+      verifyPointSliceLengths("qbezier", 3, obj.rawQBeziers)
+      obj.d = createD(name, obj)
+      obj.points = createPointSet(name, obj)
+    }
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
     mask.Objects[name] = obj
+    os.Exit(0)
   }
+}
+
+func parsePaths(name string, obj *Object) bool {
+  // If the object has both a path and paths, then stop.  This should never happen.
+  if obj.Path != "" && len(obj.Paths) > 0 {
+    btu.Fatal("Object %s has both a path and paths specified.\n", name)
+  }
+  if len(obj.Paths) > 0 {
+    obj.Path = strings.Join(obj.Paths, " ")
+  }
+  rawTokens := strings.Split(strings.ReplaceAll(obj.Path, "\n", " "), " ")
+  // note that some of the rawTokens will be empty strings
+  tokens := make([]string, 0, len(rawTokens))
+  for _, rt := range rawTokens {
+    if rt != "" {
+      tokens = append(tokens, rt)
+    }
+  }
+  fmt.Printf("Found %d tokens in '%s'\nTokens:\n", len(tokens), obj.Path)
+  for _, t := range tokens {
+    fmt.Printf("%s\n", t)
+  }
+  fmt.Printf("\n")
+  return false
 }
 
 // Parse a slice of strings, where each string is a list of points
