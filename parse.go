@@ -5,7 +5,6 @@ import (
   "image"
   _ "image/jpeg"
   "io/ioutil"
-  "os"
   "strings"
   "github.com/pelletier/go-toml"
   "github.com/brothertoad/btu"
@@ -86,7 +85,6 @@ func parseObjects() {
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
     mask.Objects[name] = obj
-    os.Exit(0)
   }
 }
 
@@ -95,23 +93,23 @@ func parsePaths(name string, obj *Object) bool {
   if obj.Path != "" && len(obj.Paths) > 0 {
     btu.Fatal("Object %s has both a path and paths specified.\n", name)
   }
+  if obj.Path == "" && len(obj.Paths) == 0 {
+    return false
+  }
   if len(obj.Paths) > 0 {
     obj.Path = strings.Join(obj.Paths, " ")
   }
   rawTokens := strings.Split(strings.ReplaceAll(obj.Path, "\n", " "), " ")
-  // note that some of the rawTokens will be empty strings
+  // note that some of the rawTokens will be empty strings - we will remove those
   tokens := make([]string, 0, len(rawTokens))
   for _, rt := range rawTokens {
     if rt != "" {
       tokens = append(tokens, rt)
     }
   }
-  fmt.Printf("Found %d tokens in '%s'\nTokens:\n", len(tokens), obj.Path)
-  for _, t := range tokens {
-    fmt.Printf("%s\n", t)
-  }
-  fmt.Printf("\n")
-  return false
+  obj.d = strings.Join(tokens, " ")
+  obj.points = pointSetFromPath(tokens)
+  return true
 }
 
 // Parse a slice of strings, where each string is a list of points

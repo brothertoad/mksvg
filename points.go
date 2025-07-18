@@ -36,3 +36,7 @@ func getAllPoints(colls []pointCollection) []image.Point {
   }
   return allPoints
 }
+
+func pointSetFromPath(tokens []string) []image.Point {
+  return make([]image.Point, 0)
+}
