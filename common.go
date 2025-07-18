@@ -61,6 +61,8 @@ type Object struct {
   // Rects are no longer supported, but we will include them here and flag an
   // error if any are specified so they aren't silently ignored.
   Rects []string
+  Path string
+  Paths []string
   Scale float64
   rawCurves []pointCollection
   rawBeziers []pointCollection
