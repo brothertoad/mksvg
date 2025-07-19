@@ -2,6 +2,7 @@ package main
 
 import (
   "image"
+  "github.com/brothertoad/btu"
 )
 
 func createPointSet(name string, obj Object) []image.Point {
@@ -38,5 +39,37 @@ func getAllPoints(colls []pointCollection) []image.Point {
 }
 
 func pointSetFromPath(tokens []string) []image.Point {
-  return make([]image.Point, 0)
+  points := make([]image.Point, 0)
+  for j := 0; j < len(tokens); {
+    cmd := tokens[j]
+    j++
+    switch cmd {
+    case "M", "L":
+      ensureEnoughPoints(cmd, 2, j, len(tokens))
+    case "m", "l":
+      ensureEnoughPoints(cmd, 2, j, len(tokens))
+    case "V", "H":
+      ensureEnoughPoints(cmd, 1, j, len(tokens))
+    case "v", "h":
+      ensureEnoughPoints(cmd, 1, j, len(tokens))
+    case "C":
+      ensureEnoughPoints(cmd, 3, j, len(tokens))
+    case "c":
+      ensureEnoughPoints(cmd, 3, j, len(tokens))
+    case "Q":
+      ensureEnoughPoints(cmd, 2, j, len(tokens))
+    case "q":
+      ensureEnoughPoints(cmd, 2, j, len(tokens))
+    case "Z", "z":
+    default:
+      btu.Fatal("Unknown command in path: %s\n", cmd)
+    }
+  }
+  return points
+}
+
+func ensureEnoughPoints(cmd string, req, offset, total int) {
+  if (offset + req) > total {
+    btu.Fatal("Not enough points for %s command, need %d, have %d\n", cmd, req, total - offset)
+  }
 }

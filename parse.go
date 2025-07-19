@@ -109,6 +109,7 @@ func parsePaths(name string, obj *Object) bool {
   }
   obj.d = strings.Join(tokens, " ")
   obj.points = pointSetFromPath(tokens)
+  // Need obj.center, obj.bbox
   return true
 }
 
