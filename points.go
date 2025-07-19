@@ -2,6 +2,7 @@ package main
 
 import (
   "image"
+  "unicode"
   "github.com/brothertoad/btu"
 )
 
@@ -46,26 +47,76 @@ func pointSetFromPath(tokens []string) []image.Point {
     switch cmd {
     case "M", "L":
       ensureEnoughPoints(cmd, 2, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+2)])
+      points = append(points, p...)
+      j += 2
     case "m", "l":
       ensureEnoughPoints(cmd, 2, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+2)])
+      points = append(points, p...)
+      j += 2
     case "V", "H":
       ensureEnoughPoints(cmd, 1, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+1)])
+      points = append(points, p...)
+      j++
     case "v", "h":
       ensureEnoughPoints(cmd, 1, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+1)])
+      points = append(points, p...)
+      j++
     case "C":
       ensureEnoughPoints(cmd, 3, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+3)])
+      points = append(points, p...)
+      j += 3
     case "c":
       ensureEnoughPoints(cmd, 3, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+3)])
+      points = append(points, p...)
+      j += 3
     case "Q":
       ensureEnoughPoints(cmd, 2, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+2)])
+      points = append(points, p...)
+      j += 2
     case "q":
       ensureEnoughPoints(cmd, 2, j, len(tokens))
+      p := parsePathPoints(tokens[j:(j+2)])
+      points = append(points, p...)
+      j += 2
     case "Z", "z":
     default:
       btu.Fatal("Unknown command in path: %s\n", cmd)
     }
   }
   return points
+}
+
+func parsePathPoints(tokens []string) []image.Point {
+  numPoints := len(tokens) / 2  // since each token is a coordinate, there are two per point
+  p := make([]image.Point, numPoints)
+  for j := 0; j < numPoints; j++ {
+    p[j].X = parsePathNumber(tokens[2*j])
+    p[j].Y = parsePathNumber(tokens[2*j + 1])
+  }
+  return p
+}
+
+func parsePathNumber(s string) int {
+  // parse until the end of the string or we find a non-digit
+  n := 0
+  for _, ch := range s {
+    if !unicode.IsDigit(ch) {
+      // anything other than a comma is a fatal error
+      if ch != ',' {
+        btu.Fatal("Found a non-digit that is not a comma in %s\n", s)
+      }
+      break
+    }
+    n = (n * 10) + int(ch - '0')
+  }
+  return n
 }
 
 func ensureEnoughPoints(cmd string, req, offset, total int) {

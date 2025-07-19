@@ -109,8 +109,35 @@ func parsePaths(name string, obj *Object) bool {
   }
   obj.d = strings.Join(tokens, " ")
   obj.points = pointSetFromPath(tokens)
-  // Need obj.center, obj.bbox
+  obj.center, obj.bbox = getPathCenter(obj)
   return true
+}
+
+// This finds the center of the bounding rectangle of the object.
+// This should probably be a method.
+func getPathCenter(obj *Object) (image.Point, image.Rectangle) {
+  xmin := 2000000000
+  xmax := -2000000000
+  ymin := 2000000000
+  ymax := -2000000000
+  for _, p := range obj.points {
+    if p.X < xmin {
+      xmin = p.X
+    }
+    if p.Y < ymin {
+      ymin = p.Y
+    }
+    if p.X > xmax {
+      xmax = p.X
+    }
+    if p.Y > ymax {
+      ymax = p.Y
+    }
+  }
+  var c image.Point
+  c.X = (xmin + xmax) / 2
+  c.Y = (ymin + ymax) / 2
+  return c, image.Rect(xmin - c.X, ymin - c.Y, xmax - c.X, ymax - c.Y)
 }
 
 // Parse a slice of strings, where each string is a list of points
