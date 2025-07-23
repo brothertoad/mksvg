@@ -1,6 +1,7 @@
 package main
 
 import (
+  "fmt"
   "image"
   "unicode"
   "github.com/brothertoad/btu"
@@ -81,6 +82,8 @@ func pointSetFromPath(tokens []string) []image.Point {
       p := parsePathPoints(cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
+    case "A", "a":
+      btu.Fatal("arcs in paths are not supported.\n")
     case "Z", "z":
     default:
       btu.Fatal("Unknown command in path: %s\n", cmd)
@@ -94,6 +97,9 @@ func parsePathPoints(cmd string, numValues int, tokens []string) []image.Point {
   if len(tokens) < numValues {
     btu.Fatal("Not enough points for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
   }
+  r := []rune(cmd)[0]
+  relative := unicode.IsLower(r)
+  fmt.Printf("cmd %q, relative is %t\n", r, relative)
   numPoints := numValues / 2  // since each value is a coordinate, there are two per point
   p := make([]image.Point, numPoints)
   for j := 0; j < numPoints; j++ {
