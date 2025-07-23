@@ -55,11 +55,11 @@ func pointSetFromPath(tokens []string) []image.Point {
     case "V", "H", "v", "h":
       btu.Fatal("No support for %s yet\n", cmd)
     case "C", "c":
-      x, y, p = parsePathPoints(x, y, cmd, 3, tokens[j:])
+      x, y, p = parsePathPoints(x, y, cmd, 6, tokens[j:])
       points = append(points, p...)
       j += 3
     case "Q", "q":
-      x, y, p = parsePathPoints(x, y, cmd, 2, tokens[j:])
+      x, y, p = parsePathPoints(x, y, cmd, 4, tokens[j:])
       points = append(points, p...)
       j += 2
     case "A", "a":
