@@ -6,6 +6,13 @@ import (
   "github.com/brothertoad/btu"
 )
 
+// This type represents a component in a path - i.e., a command string
+// (which is only one character) and one or more points.
+type part struct {
+  cmd string
+  p []image.Point // may be nil or empty
+}
+
 func pointSetFromPath(tokens []string) []image.Point {
   points := make([]image.Point, 0)
   x := 0
@@ -15,7 +22,7 @@ func pointSetFromPath(tokens []string) []image.Point {
     cmd := tokens[j]
     j++
     switch cmd {
-    case "M", "L", "m", "l":
+    case "M", "L", "m", "l", "T", "t":
       x, y, p = parsePathPoints(x, y, cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
@@ -25,7 +32,7 @@ func pointSetFromPath(tokens []string) []image.Point {
       x, y, p = parsePathPoints(x, y, cmd, 6, tokens[j:])
       points = append(points, p...)
       j += 6
-    case "Q", "q":
+    case "Q", "q", "S", "s":
       x, y, p = parsePathPoints(x, y, cmd, 4, tokens[j:])
       points = append(points, p...)
       j += 4
