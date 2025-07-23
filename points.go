@@ -46,43 +46,39 @@ func pointSetFromPath(tokens []string) []image.Point {
     j++
     switch cmd {
     case "M", "L":
-      ensureEnoughPoints(cmd, 2, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+2)])
+      p := parsePathPoints(cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
     case "m", "l":
-      ensureEnoughPoints(cmd, 2, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+2)])
+      p := parsePathPoints(cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
     case "V", "H":
-      ensureEnoughPoints(cmd, 1, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+1)])
-      points = append(points, p...)
-      j++
+      btu.Fatal("No support for V/H yet\n")
+      // ensureEnoughPoints(cmd, 1, j, len(tokens))
+      // p := parsePathPoints(tokens[j:(j+1)])
+      // points = append(points, p...)
+      // j++
     case "v", "h":
-      ensureEnoughPoints(cmd, 1, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+1)])
-      points = append(points, p...)
-      j++
+      btu.Fatal("No support for v/h yet\n")
+      // ensureEnoughPoints(cmd, 1, j, len(tokens))
+      // p := parsePathPoints(tokens[j:(j+1)])
+      // points = append(points, p...)
+      // j++
     case "C":
-      ensureEnoughPoints(cmd, 3, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+3)])
+      p := parsePathPoints(cmd, 3, tokens[j:])
       points = append(points, p...)
       j += 3
     case "c":
-      ensureEnoughPoints(cmd, 3, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+3)])
+      p := parsePathPoints(cmd, 3, tokens[j:])
       points = append(points, p...)
       j += 3
     case "Q":
-      ensureEnoughPoints(cmd, 2, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+2)])
+      p := parsePathPoints(cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
     case "q":
-      ensureEnoughPoints(cmd, 2, j, len(tokens))
-      p := parsePathPoints(tokens[j:(j+2)])
+      p := parsePathPoints(cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
     case "Z", "z":
@@ -93,8 +89,12 @@ func pointSetFromPath(tokens []string) []image.Point {
   return points
 }
 
-func parsePathPoints(tokens []string) []image.Point {
-  numPoints := len(tokens) / 2  // since each token is a coordinate, there are two per point
+func parsePathPoints(cmd string, numValues int, tokens []string) []image.Point {
+  // ensure we have enough values
+  if len(tokens) < numValues {
+    btu.Fatal("Not enough points for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
+  }
+  numPoints := numValues / 2  // since each value is a coordinate, there are two per point
   p := make([]image.Point, numPoints)
   for j := 0; j < numPoints; j++ {
     p[j].X = parsePathNumber(tokens[2*j])
@@ -117,10 +117,4 @@ func parsePathNumber(s string) int {
     n = (n * 10) + int(ch - '0')
   }
   return n
-}
-
-func ensureEnoughPoints(cmd string, req, offset, total int) {
-  if (offset + req) > total {
-    btu.Fatal("Not enough points for %s command, need %d, have %d\n", cmd, req, total - offset)
-  }
 }
