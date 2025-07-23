@@ -57,11 +57,11 @@ func pointSetFromPath(tokens []string) []image.Point {
     case "C", "c":
       x, y, p = parsePathPoints(x, y, cmd, 6, tokens[j:])
       points = append(points, p...)
-      j += 3
+      j += 6
     case "Q", "q":
       x, y, p = parsePathPoints(x, y, cmd, 4, tokens[j:])
       points = append(points, p...)
-      j += 2
+      j += 4
     case "A", "a":
       btu.Fatal("arcs in paths are not supported.\n")
     case "Z", "z":
