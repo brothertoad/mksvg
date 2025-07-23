@@ -42,16 +42,15 @@ func getAllPoints(colls []pointCollection) []image.Point {
 
 func pointSetFromPath(tokens []string) []image.Point {
   points := make([]image.Point, 0)
+  x := 0
+  y := 0
+  var p []image.Point
   for j := 0; j < len(tokens); {
     cmd := tokens[j]
     j++
     switch cmd {
-    case "M", "L":
-      p := parsePathPoints(cmd, 2, tokens[j:])
-      points = append(points, p...)
-      j += 2
-    case "m", "l":
-      p := parsePathPoints(cmd, 2, tokens[j:])
+    case "M", "L", "m", "l":
+      x, y, p = parsePathPoints(x, y, cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
     case "V", "H":
@@ -66,20 +65,12 @@ func pointSetFromPath(tokens []string) []image.Point {
       // p := parsePathPoints(tokens[j:(j+1)])
       // points = append(points, p...)
       // j++
-    case "C":
-      p := parsePathPoints(cmd, 3, tokens[j:])
+    case "C", "c":
+      x, y, p = parsePathPoints(x, y, cmd, 3, tokens[j:])
       points = append(points, p...)
       j += 3
-    case "c":
-      p := parsePathPoints(cmd, 3, tokens[j:])
-      points = append(points, p...)
-      j += 3
-    case "Q":
-      p := parsePathPoints(cmd, 2, tokens[j:])
-      points = append(points, p...)
-      j += 2
-    case "q":
-      p := parsePathPoints(cmd, 2, tokens[j:])
+    case "Q", "q":
+      x, y, p = parsePathPoints(x, y, cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
     case "A", "a":
@@ -92,7 +83,7 @@ func pointSetFromPath(tokens []string) []image.Point {
   return points
 }
 
-func parsePathPoints(cmd string, numValues int, tokens []string) []image.Point {
+func parsePathPoints(x, y int, cmd string, numValues int, tokens []string) (int, int, []image.Point) {
   // ensure we have enough values
   if len(tokens) < numValues {
     btu.Fatal("Not enough points for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
@@ -106,7 +97,14 @@ func parsePathPoints(cmd string, numValues int, tokens []string) []image.Point {
     p[j].X = parsePathNumber(tokens[2*j])
     p[j].Y = parsePathNumber(tokens[2*j + 1])
   }
-  return p
+  if relative {
+    x += p[numPoints-1].X
+    y += p[numPoints-1].Y
+  } else {
+    x = p[numPoints-1].X
+    y = p[numPoints-1].Y
+  }
+  return x, y, p
 }
 
 func parsePathNumber(s string) int {
