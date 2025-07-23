@@ -1,7 +1,6 @@
 package main
 
 import (
-  "fmt"
   "image"
   "unicode"
   "github.com/brothertoad/btu"
@@ -53,18 +52,8 @@ func pointSetFromPath(tokens []string) []image.Point {
       x, y, p = parsePathPoints(x, y, cmd, 2, tokens[j:])
       points = append(points, p...)
       j += 2
-    case "V", "H":
-      btu.Fatal("No support for V/H yet\n")
-      // ensureEnoughPoints(cmd, 1, j, len(tokens))
-      // p := parsePathPoints(tokens[j:(j+1)])
-      // points = append(points, p...)
-      // j++
-    case "v", "h":
-      btu.Fatal("No support for v/h yet\n")
-      // ensureEnoughPoints(cmd, 1, j, len(tokens))
-      // p := parsePathPoints(tokens[j:(j+1)])
-      // points = append(points, p...)
-      // j++
+    case "V", "H", "v", "h":
+      btu.Fatal("No support for %s yet\n", cmd)
     case "C", "c":
       x, y, p = parsePathPoints(x, y, cmd, 3, tokens[j:])
       points = append(points, p...)
@@ -90,7 +79,6 @@ func parsePathPoints(x, y int, cmd string, numValues int, tokens []string) (int,
   }
   r := []rune(cmd)[0]
   relative := unicode.IsLower(r)
-  fmt.Printf("cmd %q, relative is %t\n", r, relative)
   numPoints := numValues / 2  // since each value is a coordinate, there are two per point
   p := make([]image.Point, numPoints)
   for j := 0; j < numPoints; j++ {

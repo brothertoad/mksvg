@@ -13,6 +13,7 @@ import (
 
 var logLevel = ""
 var initializeToml = false
+var printMeta = false
 
 func main() {
   app := &cli.App{
@@ -30,6 +31,7 @@ func main() {
       &cli.StringFlag{Name: "image", Usage: "set background image"},
       &cli.StringFlag{Name: "log-level", Usage: "set log level", Destination: &logLevel},
       &cli.BoolFlag{Name: "initialize", Usage: "create a dummy mask.toml", Value: false, Destination: &initializeToml},
+      &cli.BoolFlag{Name: "meta", Usage: "print object metadata", Value: false, Destination: &printMeta},
       &cli.Float64Flag{Name: "scale", Usage: "set overall scale", Value: 0.0, Destination: &config.scale},
     },
     Action: mksvg,

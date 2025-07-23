@@ -82,9 +82,22 @@ func parseObjects() {
       obj.d = createD(name, obj)
       obj.points = createPointSet(name, obj)
     }
+    printObjectMeta(name, &obj)
     // OK, work around the fact that obj is a *copy* of the entry in
     // mask.Objects by copying the result back.
     mask.Objects[name] = obj
+  }
+}
+
+func printObjectMeta(name string, obj *Object) {
+  if !printMeta {
+    return
+  }
+  fmt.Printf("Object %s\n    center %d,%d\n", name, obj.center.X, obj.center.Y)
+  fmt.Printf("    bbox: %d,%d to %d,%d\n", obj.bbox.Min.X, obj.bbox.Min.Y, obj.bbox.Max.X, obj.bbox.Max.Y)
+  fmt.Printf("    points:\n")
+  for _, p := range obj.points {
+    fmt.Printf("        %d,%d\n", p.X, p.Y)
   }
 }
 
