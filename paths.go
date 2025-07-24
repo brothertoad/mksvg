@@ -1,7 +1,9 @@
 package main
 
 import (
+  "fmt"
   "image"
+  "strings"
   "unicode"
   "github.com/brothertoad/btu"
 )
@@ -11,6 +13,93 @@ import (
 type part struct {
   cmd string
   p []image.Point // may be nil or empty
+}
+
+func dAndPointsFromPath(tokens []string) (string, []image.Point) {
+  // Build a slice of parts, and use it to construct a path and a slice of points.
+  x := 0
+  y := 0
+  parts := make([]part, 0, len(tokens))
+  var pt part
+  for j := 0; j < len(tokens); {
+    cmd := tokens[j]
+    j++
+    switch cmd {
+    case "M", "L", "m", "l", "T", "t":
+      x, y, pt = parsePathCommand(x, y, cmd, 2, tokens[j:])
+      parts = append(parts, pt)
+      j += 2
+    case "V", "H", "v", "h":
+      btu.Fatal("No support for %s yet\n", cmd)
+    case "C", "c":
+      x, y, pt = parsePathCommand(x, y, cmd, 6, tokens[j:])
+      parts = append(parts, pt)
+      j += 6
+    case "Q", "q", "S", "s":
+      x, y, pt = parsePathCommand(x, y, cmd, 4, tokens[j:])
+      parts = append(parts, pt)
+      j += 4
+    case "A", "a":
+      btu.Fatal("arcs in paths are not supported.\n")
+    case "Z", "z":
+    default:
+      btu.Fatal("Unknown command in path: %s\n", cmd)
+    }
+  }
+  return dFromParts(parts), pointsFromParts(parts)
+}
+
+func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int, int, part) {
+  // ensure we have enough values
+  if len(tokens) < numValues {
+    btu.Fatal("Not enough values for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
+  }
+  r := []rune(cmd)[0]
+  relative := unicode.IsLower(r)
+  numPoints := numValues / 2  // since each value is a coordinate, there are two per point
+  p := make([]image.Point, numPoints)
+  for j := 0; j < numPoints; j++ {
+    p[j].X = parsePathNumber(tokens[2*j])
+    p[j].Y = parsePathNumber(tokens[2*j + 1])
+    // if this command is relative, make the coordinates absolute
+    if relative {
+      p[j].X += x
+      p[j].Y += y
+    }
+  }
+  if relative {
+    x += p[numPoints-1].X
+    y += p[numPoints-1].Y
+  } else {
+    x = p[numPoints-1].X
+    y = p[numPoints-1].Y
+  }
+  var pt part
+  pt.cmd = strings.ToUpper(cmd)
+  pt.p = p
+  return x, y, pt
+}
+
+func dFromParts(parts []part) string {
+  var b strings.Builder
+  for _, p := range parts {
+    fmt.Fprintf(&b, "%s ", p.cmd)
+    for j := 0; j < (len(p.p) - 1); j++ {
+      fmt.Fprintf(&b, "%d %d,", p.p[j].X, p.p[j].Y)
+    }
+    // Maybe check for no points to this part.
+    fmt.Fprintf(&b, "%d %d ", p.p[len(p.p)-1].X, p.p[len(p.p)-1].Y)
+  }
+  return b.String()
+}
+
+func pointsFromParts(parts []part) []image.Point {
+  points := make([]image.Point, 0)
+  for _, p := range parts {
+    points = append(points, p.p...)
+  }
+  // Should remove duplicates, just to be clean
+  return points
 }
 
 func pointSetFromPath(tokens []string) []image.Point {
