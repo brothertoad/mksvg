@@ -67,13 +67,8 @@ func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int
       p[j].Y += y
     }
   }
-  if relative {
-    x += p[numPoints-1].X
-    y += p[numPoints-1].Y
-  } else {
-    x = p[numPoints-1].X
-    y = p[numPoints-1].Y
-  }
+  x = p[numPoints-1].X
+  y = p[numPoints-1].Y
   var pt part
   pt.cmd = strings.ToUpper(cmd)
   pt.p = p
