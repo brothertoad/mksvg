@@ -8,19 +8,12 @@ import (
   "github.com/brothertoad/btu"
 )
 
-// This type represents a component in a path - i.e., a command string
-// (which is only one character) and one or more points.
-type part struct {
-  cmd string
-  p []image.Point // may be nil or empty
-}
-
 func dAndPointsFromPath(tokens []string) (string, []image.Point) {
   // Build a slice of parts, and use it to construct a path and a slice of points.
   x := 0
   y := 0
-  parts := make([]part, 0, len(tokens))
-  var pt part
+  parts := make([]pathPart, 0, len(tokens))
+  var pt pathPart
   for j := 0; j < len(tokens); {
     cmd := tokens[j]
     j++
@@ -49,7 +42,7 @@ func dAndPointsFromPath(tokens []string) (string, []image.Point) {
   return dFromParts(parts), pointsFromParts(parts)
 }
 
-func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int, int, part) {
+func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int, int, pathPart) {
   // ensure we have enough values
   if len(tokens) < numValues {
     btu.Fatal("Not enough values for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
@@ -69,29 +62,30 @@ func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int
   }
   x = p[numPoints-1].X
   y = p[numPoints-1].Y
-  var pt part
+  var pt pathPart
   pt.cmd = strings.ToUpper(cmd)
-  pt.p = p
+  pt.points = p
   return x, y, pt
 }
 
-func dFromParts(parts []part) string {
+func dFromParts(parts []pathPart) string {
   var b strings.Builder
   for _, p := range parts {
     fmt.Fprintf(&b, "%s ", p.cmd)
-    for j := 0; j < (len(p.p) - 1); j++ {
-      fmt.Fprintf(&b, "%d %d,", p.p[j].X, p.p[j].Y)
+    for j := 0; j < (len(p.points) - 1); j++ {
+      fmt.Fprintf(&b, "%d %d,", p.points[j].X, p.points[j].Y)
     }
     // Maybe check for no points to this part.
-    fmt.Fprintf(&b, "%d %d ", p.p[len(p.p)-1].X, p.p[len(p.p)-1].Y)
+    last := p.points[len(p.points)-1]
+    fmt.Fprintf(&b, "%d %d ", last.X, last.Y)
   }
   return b.String()
 }
 
-func pointsFromParts(parts []part) []image.Point {
+func pointsFromParts(parts []pathPart) []image.Point {
   points := make([]image.Point, 0)
   for _, p := range parts {
-    points = append(points, p.p...)
+    points = append(points, p.points...)
   }
   // Should remove duplicates, just to be clean
   return points
