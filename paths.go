@@ -14,9 +14,13 @@ import (
 func parseComponentsFromPath(tokens []string) []pathComponent {
   x := 0
   y := 0
+  haveZ := false
   components := make([]pathComponent, 0, len(tokens))
   var pc pathComponent
   for j := 0; j < len(tokens); {
+    if haveZ {
+      btu.Fatal("No commands can appear after Z/z.\n")
+    }
     cmd := tokens[j]
     j++
     switch cmd {
@@ -39,7 +43,8 @@ func parseComponentsFromPath(tokens []string) []pathComponent {
     case "A", "a":
       btu.Fatal("arcs in paths are not supported.\n")
     case "Z", "z":
-      btu.Fatal("No support for %s yet\n", cmd)
+      components = append(components, pathComponent{"Z", make([]image.Point, 0)})
+      haveZ = true
     default:
       btu.Fatal("Unknown command in path: %s\n", cmd)
     }
