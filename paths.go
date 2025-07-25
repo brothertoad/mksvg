@@ -12,8 +12,8 @@ func dAndPointsFromPath(tokens []string) (string, []image.Point) {
   // Build a slice of parts, and use it to construct a path and a slice of points.
   x := 0
   y := 0
-  parts := make([]pathPart, 0, len(tokens))
-  var pt pathPart
+  parts := make([]pathComponent, 0, len(tokens))
+  var pt pathComponent
   for j := 0; j < len(tokens); {
     cmd := tokens[j]
     j++
@@ -42,7 +42,7 @@ func dAndPointsFromPath(tokens []string) (string, []image.Point) {
   return dFromParts(parts), pointsFromParts(parts)
 }
 
-func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int, int, pathPart) {
+func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int, int, pathComponent) {
   // ensure we have enough values
   if len(tokens) < numValues {
     btu.Fatal("Not enough values for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
@@ -62,13 +62,13 @@ func parsePathCommand(x, y int, cmd string, numValues int, tokens []string) (int
   }
   x = p[numPoints-1].X
   y = p[numPoints-1].Y
-  var pt pathPart
+  var pt pathComponent
   pt.cmd = strings.ToUpper(cmd)
   pt.points = p
   return x, y, pt
 }
 
-func dFromParts(parts []pathPart) string {
+func dFromParts(parts []pathComponent) string {
   var b strings.Builder
   for _, p := range parts {
     fmt.Fprintf(&b, "%s ", p.cmd)
@@ -82,7 +82,7 @@ func dFromParts(parts []pathPart) string {
   return b.String()
 }
 
-func pointsFromParts(parts []pathPart) []image.Point {
+func pointsFromParts(parts []pathComponent) []image.Point {
   points := make([]image.Point, 0)
   for _, p := range parts {
     points = append(points, p.points...)

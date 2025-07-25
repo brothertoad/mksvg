@@ -84,9 +84,9 @@ var mask struct {
   Renders []RenderObject
 }
 
-// This type represents one part of a path - i.e., a command string
+// This type represents one component of a path - i.e., a command string
 // (which is only one character) and one or more points.
-type pathPart struct {
+type pathComponent struct {
   cmd string
   points []image.Point // may be nil or empty
 }
