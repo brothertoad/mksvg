@@ -25,7 +25,9 @@ func parseComponentsFromPath(tokens []string) []pathComponent {
       components = append(components, pc)
       j += 2
     case "V", "H", "v", "h":
-      btu.Fatal("No support for %s yet\n", cmd)
+      x, y, pc = createSingleParameterComponent(x, y, cmd, tokens[j:])
+      components = append(components, pc)
+      j += 1
     case "C", "c":
       x, y, pc = cmdToComponent(x, y, cmd, 6, tokens[j:])
       components = append(components, pc)
@@ -69,6 +71,36 @@ func cmdToComponent(x, y int, cmd string, numValues int, tokens []string) (int, 
   pc.cmd = strings.ToUpper(cmd)
   pc.points = p
   return x, y, pc
+}
+
+func createSingleParameterComponent(x, y int, cmd string, tokens []string) (int, int, pathComponent) {
+  if len(tokens) < 1 {
+    btu.Fatal("Need a value for %s command.\n", cmd)
+  }
+  p := make([]image.Point, 1)
+  target := parsePathNumber(tokens[0])
+  if cmd == "V" {
+    p[0].X = x
+    p[0].Y = target
+  } else if cmd == "H" {
+    p[0].X = target
+    p[0].Y = y
+  } else if cmd == "v" {
+    p[0].X = x
+    p[0].Y = target + y
+  } else if cmd == "h" {
+    p[0].X = target + x
+    p[0].Y = y
+  }
+  var pc pathComponent
+  pc.cmd = "L"
+  pc.points = p
+  return p[0].X, p[0].Y, pc
+}
+
+func isRelative(cmd string) bool {
+  r := []rune(cmd)[0]
+  return unicode.IsLower(r)
 }
 
 // This finds the center of the bounding rectangle of the components.
@@ -122,7 +154,13 @@ func dAndPointsFromComponents(components []pathComponent, center image.Point) (s
 func parsePathNumber(s string) int {
   // parse until the end of the string or we find a non-digit
   n := 0
-  for _, ch := range s {
+  negate := false
+  for j, ch := range s {
+    // If there is a leading minus sign, the number is negative.
+    if j == 0 && ch == '-' {
+      negate = true
+      continue
+    }
     if !unicode.IsDigit(ch) {
       // anything other than a comma is a fatal error
       if ch != ',' {
@@ -131,6 +169,9 @@ func parsePathNumber(s string) int {
       break
     }
     n = (n * 10) + int(ch - '0')
+  }
+  if negate {
+    return -n
   }
   return n
 }
