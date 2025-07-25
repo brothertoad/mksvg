@@ -133,6 +133,8 @@ strokeWidth = 1
 # p = { x = , y =  }
 
 [objects]
+# objects can have a path or paths, but not both
+# path is a string, paths is an array of strings
 # objects can have curves, beziers, qbeziers, lines and segments
 # obj.scale = 1.0
 
