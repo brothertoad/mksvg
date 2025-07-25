@@ -124,10 +124,6 @@ func parsePaths(name string, obj *Object) bool {
   components := parseComponentsFromPath(tokens)
   obj.center, obj.bbox = centerAndBboxFromComponents(components)
   obj.d, obj.points = dAndPointsFromComponents(components, obj.center)
-  // obj.d = strings.Join(tokens, " ")
-  // obj.points = pointSetFromPath(tokens)
-  // obj.d, obj.points = dAndPointsFromPath(tokens)
-  // obj.center, obj.bbox = getPathCenter(obj)
   return true
 }
 
