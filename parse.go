@@ -71,6 +71,7 @@ func parseObjects() {
       btu.Fatal("%s has rectangles, which are no longer supported.\n", name)
     }
     if !parsePaths(name, &obj) {
+      fmt.Printf("Consider using path(s) for object %s\n", name)
       obj.rawCurves = parsePointLists(obj.Curves)
       obj.rawBeziers = parsePointLists(obj.Beziers)
       obj.rawQBeziers = parsePointLists(obj.QBeziers)
