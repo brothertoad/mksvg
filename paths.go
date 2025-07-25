@@ -37,6 +37,7 @@ func parseComponentsFromPath(tokens []string) []pathComponent {
     case "A", "a":
       btu.Fatal("arcs in paths are not supported.\n")
     case "Z", "z":
+      btu.Fatal("No support for %s yet\n", cmd)
     default:
       btu.Fatal("Unknown command in path: %s\n", cmd)
     }
