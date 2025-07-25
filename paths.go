@@ -118,29 +118,6 @@ func dAndPointsFromComponents(components []pathComponent, center image.Point) (s
   return sb.String(), points
 }
 
-func parsePathPoints(x, y int, cmd string, numValues int, tokens []string) (int, int, []image.Point) {
-  // ensure we have enough values
-  if len(tokens) < numValues {
-    btu.Fatal("Not enough points for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
-  }
-  r := []rune(cmd)[0]
-  relative := unicode.IsLower(r)
-  numPoints := numValues / 2  // since each value is a coordinate, there are two per point
-  p := make([]image.Point, numPoints)
-  for j := 0; j < numPoints; j++ {
-    p[j].X = parsePathNumber(tokens[2*j])
-    p[j].Y = parsePathNumber(tokens[2*j + 1])
-  }
-  if relative {
-    x += p[numPoints-1].X
-    y += p[numPoints-1].Y
-  } else {
-    x = p[numPoints-1].X
-    y = p[numPoints-1].Y
-  }
-  return x, y, p
-}
-
 func parsePathNumber(s string) int {
   // parse until the end of the string or we find a non-digit
   n := 0
