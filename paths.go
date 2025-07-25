@@ -99,16 +99,21 @@ func centerAndBboxFromComponents(components []pathComponent) (image.Point, image
 }
 
 func dAndPointsFromComponents(components []pathComponent, center image.Point) (string, []image.Point) {
-  points := make([]image.Point, 0)
+  // Use a map to avoid duplicate points.
+  pointMap := make(map[image.Point]bool)
   var sb strings.Builder
   for _, component := range components {
     fmt.Fprintf(&sb, "%s", component.cmd)
     pss := make([]string, 0, len(component.points))
     for _, p := range component.points {
       pss = append(pss, fmt.Sprintf(" %d %d", p.X - center.X, p.Y - center.Y))
-      points = append(points, p)
+      pointMap[p] = true
     }
     fmt.Fprintf(&sb, "%s ", strings.Join(pss, ","))
+  }
+  points := make([]image.Point, 0, len(pointMap))
+  for p, _ := range pointMap {
+    points = append(points, p)
   }
   return sb.String(), points
 }
