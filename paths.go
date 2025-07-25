@@ -8,6 +8,65 @@ import (
   "github.com/brothertoad/btu"
 )
 
+func parseComponentsFromPath(tokens []string) []pathComponent {
+  x := 0
+  y := 0
+  components := make([]pathComponent, 0, len(tokens))
+  var pc pathComponent
+  for j := 0; j < len(tokens); {
+    cmd := tokens[j]
+    j++
+    switch cmd {
+    case "M", "L", "m", "l", "T", "t":
+      x, y, pc = cmdToComponent(x, y, cmd, 2, tokens[j:])
+      components = append(components, pc)
+      j += 2
+    case "V", "H", "v", "h":
+      btu.Fatal("No support for %s yet\n", cmd)
+    case "C", "c":
+      x, y, pc = cmdToComponent(x, y, cmd, 6, tokens[j:])
+      components = append(components, pc)
+      j += 6
+    case "Q", "q", "S", "s":
+      x, y, pc = cmdToComponent(x, y, cmd, 4, tokens[j:])
+      components = append(components, pc)
+      j += 4
+    case "A", "a":
+      btu.Fatal("arcs in paths are not supported.\n")
+    case "Z", "z":
+    default:
+      btu.Fatal("Unknown command in path: %s\n", cmd)
+    }
+  }
+  return components
+}
+
+func cmdToComponent(x, y int, cmd string, numValues int, tokens []string) (int, int, pathComponent) {
+    // ensure we have enough values
+  if len(tokens) < numValues {
+    btu.Fatal("Not enough values for %s command, need %d, have %d\n", cmd, numValues, len(tokens))
+  }
+  r := []rune(cmd)[0]
+  relative := unicode.IsLower(r)
+  numPoints := numValues / 2  // since each value is a coordinate, there are two per point
+  p := make([]image.Point, numPoints)
+  for j := 0; j < numPoints; j++ {
+    p[j].X = parsePathNumber(tokens[2*j])
+    p[j].Y = parsePathNumber(tokens[2*j + 1])
+    // if this command is relative, make the coordinates absolute
+    if relative {
+      p[j].X += x
+      p[j].Y += y
+    }
+  }
+  x = p[numPoints-1].X
+  y = p[numPoints-1].Y
+  var pc pathComponent
+  pc.cmd = strings.ToUpper(cmd)
+  pc.points = p
+  return x, y, pc
+}
+
 func dAndPointsFromPath(tokens []string) (string, []image.Point) {
   // Build a slice of parts, and use it to construct a path and a slice of points.
   x := 0
