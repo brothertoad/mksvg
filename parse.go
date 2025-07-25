@@ -99,6 +99,7 @@ func printObjectMeta(name string, obj *Object) {
   for _, p := range obj.points {
     fmt.Printf("        %d,%d\n", p.X, p.Y)
   }
+  fmt.Printf("    d: %s\n", obj.d)
 }
 
 func parsePaths(name string, obj *Object) bool {
@@ -120,10 +121,13 @@ func parsePaths(name string, obj *Object) bool {
       tokens = append(tokens, rt)
     }
   }
+  components := parseComponentsFromPath(tokens)
+  obj.center, obj.bbox = centerAndBboxFromComponents(components)
+  obj.d, obj.points = dAndPointsFromComponents(components, obj.center)
   // obj.d = strings.Join(tokens, " ")
   // obj.points = pointSetFromPath(tokens)
-  obj.d, obj.points = dAndPointsFromPath(tokens)
-  obj.center, obj.bbox = getPathCenter(obj)
+  // obj.d, obj.points = dAndPointsFromPath(tokens)
+  // obj.center, obj.bbox = getPathCenter(obj)
   return true
 }
 

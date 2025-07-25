@@ -8,6 +8,9 @@ import (
   "github.com/brothertoad/btu"
 )
 
+// Create a slice of components from the path tokens.  While doing so,
+// convert all relative commands to absolute, and convert V/H/v/h to L
+// so that each component has points (rather than a single parameter).
 func parseComponentsFromPath(tokens []string) []pathComponent {
   x := 0
   y := 0
@@ -65,6 +68,49 @@ func cmdToComponent(x, y int, cmd string, numValues int, tokens []string) (int, 
   pc.cmd = strings.ToUpper(cmd)
   pc.points = p
   return x, y, pc
+}
+
+// This finds the center of the bounding rectangle of the components.
+func centerAndBboxFromComponents(components []pathComponent) (image.Point, image.Rectangle) {
+  xmin := 2000000000
+  xmax := -2000000000
+  ymin := 2000000000
+  ymax := -2000000000
+  for _, component := range components {
+    for _, p := range component.points {
+      if p.X < xmin {
+        xmin = p.X
+      }
+      if p.Y < ymin {
+        ymin = p.Y
+      }
+      if p.X > xmax {
+        xmax = p.X
+      }
+      if p.Y > ymax {
+        ymax = p.Y
+      }
+    }
+  }
+  var c image.Point
+  c.X = (xmin + xmax) / 2
+  c.Y = (ymin + ymax) / 2
+  return c, image.Rect(xmin - c.X, ymin - c.Y, xmax - c.X, ymax - c.Y)
+}
+
+func dAndPointsFromComponents(components []pathComponent, center image.Point) (string, []image.Point) {
+  points := make([]image.Point, 0)
+  var sb strings.Builder
+  for _, component := range components {
+    fmt.Fprintf(&sb, "%s", component.cmd)
+    pss := make([]string, 0, len(component.points))
+    for _, p := range component.points {
+      pss = append(pss, fmt.Sprintf(" %d %d", p.X - center.X, p.Y - center.Y))
+      points = append(points, p)
+    }
+    fmt.Fprintf(&sb, "%s ", strings.Join(pss, ","))
+  }
+  return sb.String(), points
 }
 
 func dAndPointsFromPath(tokens []string) (string, []image.Point) {
